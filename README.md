@@ -55,6 +55,16 @@ advantage score data/canonical_v1 --checkpoint artifacts/shared_v_seed0.pt \
   --ns 1 5 10 20 --split test --output artifacts/shared_v_scores.csv
 ```
 
+samp830 / LIBERO 数据可以直接转换；脚本会生成 reward sidecar、staging symlink 和 canonical NPZ，不复制原始 Parquet：
+
+```bash
+python scripts/convert_samp830.py /path/to/samp830 \
+  --task-index 0 \
+  --output data/processed/samp830_task0 \
+  --work-dir data/processed/samp830_task0_work \
+  --seed 12
+```
+
 适配器已通过人工 Parquet 文件的读写、奖励合并和终止检查；真实样本到达后还需确认字段、奖励时间、动作 chunk、任务时限、参考策略及家族标识。
 第一版只导入低维状态，不解码视频。只含图像的数据应先增加独立且版本固定的特征提取器，不能自动把图像展平当低维状态。
 `train` 只读取 manifest 中的训练轨迹及其奖励；不读取 test、现成 advantage 标签或 oracle。

@@ -1,0 +1,18 @@
+{
+  "source_id": "samp830-libero40-v1",
+  "source_revision": "71a88ad0eaa5f5dc5237e6ede56e7cc3d4a3e9e8",
+  "source_manifest": "episode_manifest.jsonl",
+  "policy_id": "samp830/flow_bc/libero_10",
+  "task_id": "libero_10/task_0",
+  "task_horizon": 500,
+  "state_columns": ["state"],
+  "action_column": "actions",
+  "reward_column": "reward",
+  "reward_sidecar": "meta/returns_samp830.parquet",
+  "episode_column": "episode_index",
+  "frame_column": "frame_index",
+  "rows_are_primitive_transitions": true,
+  "episode_end_is_terminal": true,
+  "feature_version": "libero-state8-v1",
+  "data_glob": "data/**/*.parquet"
+}

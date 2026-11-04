@@ -45,6 +45,12 @@ def main():
     convert = sub.add_parser("convert-rlinf")
     convert.add_argument("root"); convert.add_argument("--config", required=True)
     convert.add_argument("--output", required=True); convert.add_argument("--seed", type=int, default=0)
+    samp = sub.add_parser("convert-samp830")
+    samp.add_argument("source_root"); samp.add_argument("--task-index", type=int, required=True)
+    samp.add_argument("--output", required=True); samp.add_argument("--work-dir", required=True)
+    samp.add_argument("--seed", type=int, default=0)
+    samp.add_argument("--task-horizon", type=int, default=500)
+    samp.add_argument("--overwrite-work", action="store_true")
     train = sub.add_parser("train")
     train.add_argument("dataset"); train.add_argument("--output", required=True)
     train.add_argument("--n", type=int, default=1); train.add_argument("--gamma", type=float, default=.99)
@@ -80,6 +86,12 @@ def main():
         episodes = load_rlinf(args.root, json.loads(Path(args.config).read_text()))
         manifest = write_dataset(episodes, args.output, args.seed)
         print(json.dumps({"episodes": len(episodes), "split_sizes": {k:len(v) for k,v in manifest["split"].items()}}, indent=2))
+    elif args.command == "convert-samp830":
+        from .samp830 import convert_task
+        summary = convert_task(args.source_root, args.task_index, args.output, args.work_dir,
+                               seed=args.seed, task_horizon=args.task_horizon,
+                               overwrite_work=args.overwrite_work)
+        print(json.dumps(summary, indent=2, ensure_ascii=False))
     elif args.command == "train":
         import torch
         from .schema import Episode, file_hash
