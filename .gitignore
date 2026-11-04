@@ -10,3 +10,5 @@ artifacts/
 *.hdf5
 *.h5
 .env
+!samples/
+!samples/*.parquet
