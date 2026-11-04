@@ -1,0 +1,263 @@
+{
+  "config": {
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "episodes_per_seed": 450,
+    "updates": 1000,
+    "max_test_anchors_per_seed": 40,
+    "score_branches_per_candidate": 16,
+    "gamma": 0.99,
+    "branch_seed_scheme": "SeedSequence(seed,anchor,repeat,9876)"
+  },
+  "summary": [
+    {
+      "method": "mc_q_minus_v",
+      "ranking_accuracy_mean": 0.6833333333333332,
+      "advantage_rmse_mean": 0.03603717536726048,
+      "pair_coverage_mean": 1.0
+    },
+    {
+      "method": "td_n1",
+      "ranking_accuracy_mean": 0.5416666666666667,
+      "advantage_rmse_mean": 0.04984425372265727,
+      "pair_coverage_mean": 1.0
+    },
+    {
+      "method": "td_n5",
+      "ranking_accuracy_mean": 0.4749999999999999,
+      "advantage_rmse_mean": 0.09975034922948062,
+      "pair_coverage_mean": 1.0
+    },
+    {
+      "method": "td_n10",
+      "ranking_accuracy_mean": 0.44166666666666665,
+      "advantage_rmse_mean": 0.11514280187859534,
+      "pair_coverage_mean": 1.0
+    },
+    {
+      "method": "td_n20",
+      "ranking_accuracy_mean": 0.425,
+      "advantage_rmse_mean": 0.11594602033520664,
+      "pair_coverage_mean": 1.0
+    }
+  ],
+  "runs": [
+    {
+      "seed": 0,
+      "method": "mc_q_minus_v",
+      "ranking_accuracy": 0.875,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.02277357029426265,
+      "heldout_v_rmse": 0.030780824756336856,
+      "heldout_q_rmse": 0.036484428435317004
+    },
+    {
+      "seed": 0,
+      "method": "td_n1",
+      "ranking_accuracy": 0.525,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.04875011263372028,
+      "heldout_v_rmse": 0.030780824756336856,
+      "heldout_q_rmse": 0.036484428435317004
+    },
+    {
+      "seed": 0,
+      "method": "td_n5",
+      "ranking_accuracy": 0.525,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.10774337004310215,
+      "heldout_v_rmse": 0.030780824756336856,
+      "heldout_q_rmse": 0.036484428435317004
+    },
+    {
+      "seed": 0,
+      "method": "td_n10",
+      "ranking_accuracy": 0.525,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.11689590763027828,
+      "heldout_v_rmse": 0.030780824756336856,
+      "heldout_q_rmse": 0.036484428435317004
+    },
+    {
+      "seed": 0,
+      "method": "td_n20",
+      "ranking_accuracy": 0.525,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.11496284509044943,
+      "heldout_v_rmse": 0.030780824756336856,
+      "heldout_q_rmse": 0.036484428435317004
+    },
+    {
+      "seed": 1,
+      "method": "mc_q_minus_v",
+      "ranking_accuracy": 0.3,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.03526357020797069,
+      "heldout_v_rmse": 0.06847743667019134,
+      "heldout_q_rmse": 0.083834806872877
+    },
+    {
+      "seed": 1,
+      "method": "td_n1",
+      "ranking_accuracy": 0.55,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.051849226059183594,
+      "heldout_v_rmse": 0.06847743667019134,
+      "heldout_q_rmse": 0.083834806872877
+    },
+    {
+      "seed": 1,
+      "method": "td_n5",
+      "ranking_accuracy": 0.5,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.10886383262260084,
+      "heldout_v_rmse": 0.06847743667019134,
+      "heldout_q_rmse": 0.083834806872877
+    },
+    {
+      "seed": 1,
+      "method": "td_n10",
+      "ranking_accuracy": 0.425,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.1255324495788346,
+      "heldout_v_rmse": 0.06847743667019134,
+      "heldout_q_rmse": 0.083834806872877
+    },
+    {
+      "seed": 1,
+      "method": "td_n20",
+      "ranking_accuracy": 0.425,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.13379754053643103,
+      "heldout_v_rmse": 0.06847743667019134,
+      "heldout_q_rmse": 0.083834806872877
+    },
+    {
+      "seed": 2,
+      "method": "mc_q_minus_v",
+      "ranking_accuracy": 0.875,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.050074385599548084,
+      "heldout_v_rmse": 0.060528281446297384,
+      "heldout_q_rmse": 0.07059617906145046
+    },
+    {
+      "seed": 2,
+      "method": "td_n1",
+      "ranking_accuracy": 0.55,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.04893342247506795,
+      "heldout_v_rmse": 0.060528281446297384,
+      "heldout_q_rmse": 0.07059617906145046
+    },
+    {
+      "seed": 2,
+      "method": "td_n5",
+      "ranking_accuracy": 0.4,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.08264384502273885,
+      "heldout_v_rmse": 0.060528281446297384,
+      "heldout_q_rmse": 0.07059617906145046
+    },
+    {
+      "seed": 2,
+      "method": "td_n10",
+      "ranking_accuracy": 0.375,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.10300004842667312,
+      "heldout_v_rmse": 0.060528281446297384,
+      "heldout_q_rmse": 0.07059617906145046
+    },
+    {
+      "seed": 2,
+      "method": "td_n20",
+      "ranking_accuracy": 0.325,
+      "anchors": 40,
+      "evaluable_anchors": 40,
+      "valid_pairs": 40,
+      "pair_coverage": 1.0,
+      "min_reference_gap": 0.005,
+      "advantage_rmse": 0.09907767537873945,
+      "heldout_v_rmse": 0.060528281446297384,
+      "heldout_q_rmse": 0.07059617906145046
+    }
+  ],
+  "limitations": [
+    "Synthetic MDP only; exact DP labels never supervise V or Q.",
+    "Learned Q-V is a comparison method, not a ground-truth judge.",
+    "TD scores average repeated future branches; Q-V reads no future observations.",
+    "One anchor per held-out episode; these are preliminary results without confidence intervals.",
+    "Single forced action then fixed reference policy; candidates stay in its action support."
+  ],
+  "environment": {
+    "numpy": "1.22.4",
+    "torch": "2.7.1+cu128"
+  },
+  "checkpoint_sha256": {
+    "q_seed1.pt": "e1b064fd7ee17100beec36ab9a830118c1f5eb34c2599e02bcd5229e2a59b40c",
+    "v_seed0.pt": "bbf57aa856bc871ff99a879025fcf43dc6d535d27e890ff73e82f05d888daa4f",
+    "v_seed1.pt": "3cb428a6ad295c3a358d75068aefca81b87913b7f0d3d9fde110e0e9d17a0dfc",
+    "v_seed2.pt": "7443e9c5901c1469c5087a1a48fbb724aaeb69faf701ba7b7975538ba3713263",
+    "q_seed2.pt": "551a89a4559a9ea9fc626303e9695065089e121624002567a1b2a4fc52ff92d7",
+    "q_seed0.pt": "9f222c88eb0915540c1b37c589ff1ea1ee876675a4b4baf26a2d05e44ccc0282"
+  }
+}
