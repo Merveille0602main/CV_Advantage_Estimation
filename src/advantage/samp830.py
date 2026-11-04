@@ -79,9 +79,12 @@ def build_reward_sidecar(source_root, records, episode_ids, output_path):
         path = _episode_path(source_root, eid)
         if not path.is_file():
             raise ValueError(f"missing episode file {path}")
-        table = pq.read_table(path, columns=["episode_index", "frame_index"])
+        table = pq.read_table(path, columns=["episode_index", "frame_index", "task_index"])
         episodes = table.column("episode_index").to_numpy(zero_copy_only=False)
         frames = table.column("frame_index").to_numpy(zero_copy_only=False)
+        tasks = table.column("task_index").to_numpy(zero_copy_only=False)
+        if not np.all(tasks == int(records[eid]["task_index"])):
+            raise ValueError(f"episode {eid}: task_index disagrees with manifest")
         if len(frames) != int(records[eid]["length"]):
             raise ValueError(f"episode {eid}: length mismatch")
         if not np.all(episodes == eid):
@@ -184,6 +187,8 @@ def _validate_episodes(episodes, records, task_horizon):
         row = records[eid]
         if len(episode) != int(row["length"]):
             raise ValueError(f"episode {eid}: converted length mismatch")
+        if not row["success"] and len(episode) != int(task_horizon):
+            raise ValueError(f"episode {eid}: failed rollout ends before task horizon; cannot assume true termination")
         expected = 1.0 if row["success"] else 0.0
         if not np.isclose(float(episode.reward.sum()), expected):
             raise ValueError(f"episode {eid}: reconstructed reward mismatch")

@@ -1,0 +1,292 @@
+{
+  "status": "passed",
+  "scope": "same_episode_smoke_only",
+  "device": "cuda",
+  "torch_version": "2.7.1+cu128",
+  "numpy_version": "1.22.4",
+  "python_version": "3.10.22",
+  "updates_per_model": 200,
+  "raw_samples": 4,
+  "transitions": 1257,
+  "score_rows": 6285,
+  "audits": [
+    {
+      "file": "libero_10_episode_000232.parquet",
+      "sha256": "adfc87e6bde5a398b586366d3e3e57bb051d59849c146ff2888214127e9279cb",
+      "transitions": 147,
+      "state_dim": 8,
+      "action_dim": 7,
+      "success": true,
+      "task_index": 9,
+      "action_min": -1.0,
+      "action_max": 1.0,
+      "row_interval_seconds": 0.09999996423721313
+    },
+    {
+      "file": "libero_goal_episode_000488.parquet",
+      "sha256": "b53eb71fb608321bd3fca2710c105e95ed4cced071db52d05ba4c3c26592850c",
+      "transitions": 500,
+      "state_dim": 8,
+      "action_dim": 7,
+      "success": false,
+      "task_index": 19,
+      "action_min": -1.0,
+      "action_max": 0.9942881464958191,
+      "row_interval_seconds": 0.10000038146972656
+    },
+    {
+      "file": "libero_object_episode_000672.parquet",
+      "sha256": "148175b1a109df72730e1ee8f1d50a8880b513f12ad996cd02b8f51bcd1d69b7",
+      "transitions": 110,
+      "state_dim": 8,
+      "action_dim": 7,
+      "success": true,
+      "task_index": 26,
+      "action_min": -1.0,
+      "action_max": 1.0,
+      "row_interval_seconds": 0.09999990463256836
+    },
+    {
+      "file": "libero_spatial_episode_000847.parquet",
+      "sha256": "71d2d6cd3fc01a2ef77aa8c2d8319351af85f189701b5b57861141bca5903d1a",
+      "transitions": 500,
+      "state_dim": 8,
+      "action_dim": 7,
+      "success": false,
+      "task_index": 33,
+      "action_min": -1.0,
+      "action_max": 1.0,
+      "row_interval_seconds": 0.10000038146972656
+    }
+  ],
+  "tasks": [
+    {
+      "task_index": 9,
+      "conversion": {
+        "episodes": 1,
+        "task_index": 9,
+        "suite": "libero_10",
+        "task_id": "libero_10/task_9",
+        "policy_id": "samp830/flow_bc/libero_10",
+        "task_horizon": 500,
+        "source_id": "samp830-libero40-v1",
+        "source_revision": "71a88ad0eaa5f5dc5237e6ede56e7cc3d4a3e9e8",
+        "split_seed": 0,
+        "split_sizes": {
+          "train": 0,
+          "validation": 0,
+          "test": 1
+        },
+        "split_outcomes": {
+          "train": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "validation": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "test": {
+            "episodes": 1,
+            "success": 1,
+            "failure": 0
+          }
+        },
+        "warnings": [
+          "train: missing success or failure",
+          "validation: missing success or failure",
+          "test: missing success or failure"
+        ],
+        "output": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_9/canonical",
+        "work_dir": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_9/conversion_work",
+        "config_path": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_9/conversion_work/config.json"
+      },
+      "normal_train_split_available": false,
+      "scope": "same_episode_smoke_only",
+      "v_loss_first20": 0.050687417399603876,
+      "v_loss_last20": 1.4930153565728687e-05,
+      "q_loss_first20": 0.06104325596243143,
+      "q_loss_last20": 8.945076224335935e-05,
+      "in_sample_v_mc_rmse": 0.003626173091642304,
+      "in_sample_q_mc_rmse": 0.008920952585632295,
+      "v_checkpoint_sha256": "5962134f4118840279fd0fc4d376a34659596b37ab4addf52146a5e643270d4c",
+      "q_checkpoint_sha256": "4300dbdf355d60ae7e3a26e7d0f4790ab875adf6993759c7a50ad39bf105b636"
+    },
+    {
+      "task_index": 19,
+      "conversion": {
+        "episodes": 1,
+        "task_index": 19,
+        "suite": "libero_goal",
+        "task_id": "libero_goal/task_19",
+        "policy_id": "samp830/flow_bc/libero_goal",
+        "task_horizon": 500,
+        "source_id": "samp830-libero40-v1",
+        "source_revision": "71a88ad0eaa5f5dc5237e6ede56e7cc3d4a3e9e8",
+        "split_seed": 0,
+        "split_sizes": {
+          "train": 0,
+          "validation": 0,
+          "test": 1
+        },
+        "split_outcomes": {
+          "train": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "validation": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "test": {
+            "episodes": 1,
+            "success": 0,
+            "failure": 1
+          }
+        },
+        "warnings": [
+          "train: missing success or failure",
+          "validation: missing success or failure",
+          "test: missing success or failure"
+        ],
+        "output": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_19/canonical",
+        "work_dir": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_19/conversion_work",
+        "config_path": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_19/conversion_work/config.json"
+      },
+      "normal_train_split_available": false,
+      "scope": "same_episode_smoke_only",
+      "v_loss_first20": 0.0021234639894828432,
+      "v_loss_last20": 1.911814399591094e-06,
+      "q_loss_first20": 0.0015659663360565901,
+      "q_loss_last20": 6.524921332129452e-06,
+      "in_sample_v_mc_rmse": 0.0014810931576409044,
+      "in_sample_q_mc_rmse": 0.0023228412662115957,
+      "v_checkpoint_sha256": "49cc1c0bc724ebc6d33d7558ee09d2027eafae6e7acda321ce98c7415ab2cee0",
+      "q_checkpoint_sha256": "4691c583d05b9b81e14641f1bde883102eac4ef98cfa7e641ad8aefd863d6e57"
+    },
+    {
+      "task_index": 26,
+      "conversion": {
+        "episodes": 1,
+        "task_index": 26,
+        "suite": "libero_object",
+        "task_id": "libero_object/task_26",
+        "policy_id": "samp830/flow_bc/libero_object",
+        "task_horizon": 500,
+        "source_id": "samp830-libero40-v1",
+        "source_revision": "71a88ad0eaa5f5dc5237e6ede56e7cc3d4a3e9e8",
+        "split_seed": 0,
+        "split_sizes": {
+          "train": 0,
+          "validation": 0,
+          "test": 1
+        },
+        "split_outcomes": {
+          "train": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "validation": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "test": {
+            "episodes": 1,
+            "success": 1,
+            "failure": 0
+          }
+        },
+        "warnings": [
+          "train: missing success or failure",
+          "validation: missing success or failure",
+          "test: missing success or failure"
+        ],
+        "output": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_26/canonical",
+        "work_dir": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_26/conversion_work",
+        "config_path": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_26/conversion_work/config.json"
+      },
+      "normal_train_split_available": false,
+      "scope": "same_episode_smoke_only",
+      "v_loss_first20": 0.056851697107777,
+      "v_loss_last20": 5.363969066820573e-05,
+      "q_loss_first20": 0.06609087437391281,
+      "q_loss_last20": 0.00010314092105545569,
+      "in_sample_v_mc_rmse": 0.006717312763643369,
+      "in_sample_q_mc_rmse": 0.009465013819017399,
+      "v_checkpoint_sha256": "49b1ff04e834e1b289b0281d4e0f9edd912739b41fe7494dd8034c99d9dc415b",
+      "q_checkpoint_sha256": "8257924364abcd13c00623c6d5c916459041f8a6e740670818fc4702a32c2a1e"
+    },
+    {
+      "task_index": 33,
+      "conversion": {
+        "episodes": 1,
+        "task_index": 33,
+        "suite": "libero_spatial",
+        "task_id": "libero_spatial/task_33",
+        "policy_id": "samp830/flow_bc/libero_spatial",
+        "task_horizon": 500,
+        "source_id": "samp830-libero40-v1",
+        "source_revision": "71a88ad0eaa5f5dc5237e6ede56e7cc3d4a3e9e8",
+        "split_seed": 0,
+        "split_sizes": {
+          "train": 0,
+          "validation": 0,
+          "test": 1
+        },
+        "split_outcomes": {
+          "train": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "validation": {
+            "episodes": 0,
+            "success": 0,
+            "failure": 0
+          },
+          "test": {
+            "episodes": 1,
+            "success": 0,
+            "failure": 1
+          }
+        },
+        "warnings": [
+          "train: missing success or failure",
+          "validation: missing success or failure",
+          "test: missing success or failure"
+        ],
+        "output": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_33/canonical",
+        "work_dir": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_33/conversion_work",
+        "config_path": "/home/merveille/CV_Advantage_Estimation/artifacts/real_samples_smoke_v1/task_33/conversion_work/config.json"
+      },
+      "normal_train_split_available": false,
+      "scope": "same_episode_smoke_only",
+      "v_loss_first20": 0.002434695724514313,
+      "v_loss_last20": 2.7130278510867358e-06,
+      "q_loss_first20": 0.0011228447896428407,
+      "q_loss_last20": 4.62806314089903e-06,
+      "in_sample_v_mc_rmse": 0.001519551438177893,
+      "in_sample_q_mc_rmse": 0.002084431832994145,
+      "v_checkpoint_sha256": "d9faae8b31483e345155a022c9f340723177b54a38b2a81f199a4ba3dc7e5d00",
+      "q_checkpoint_sha256": "a1051c70e71600285b2230d691c3669e2f3192461df19eaa76ad8d8580cf51a0"
+    }
+  ],
+  "limitations": [
+    "One episode per task: no valid held-out learning/generalization evaluation.",
+    "Rewards reconstructed from manifest: final-success reward only; terminal next_obs is a masked placeholder.",
+    "Source samp830/libero_40_suboptimal_v1, not the RLinf RECAP release.",
+    "Policy identity and primitive-step/action alignment follow source metadata; no simulator replay validation.",
+    "State8 omits images/object history; this smoke test makes no full-Markov or true-value accuracy claim."
+  ],
+  "regression_tests": {
+    "passed": 30,
+    "failures": 0
+  },
+  "source_samples_commit": "21cdbdc12dec38f7db1bbd5a525c5df8993d95fb"
+}

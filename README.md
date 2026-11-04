@@ -122,3 +122,20 @@ TD/N-step 读取独立评分分支，每个候选默认平均 16 次评分；MC-
 这些方法可读取的未来信息不同，结果是能力对照，不能直接解释为同信息权限下算法优劣。
 
 见 [评价协议](docs/EVALUATION.md)。真实数据中不能把另一个已学习 Q 当真值；需独立分支续跑或明确强度较弱的代理标签。
+
+
+## 用仓库真实样本检查流程
+
+`samples/` 含 samp830 数据源的四条真实轨迹，每个任务仅一条；不是 RLinf RECAP 数据。
+它们不能构成每任务独立训练/验证/测试集，普通训练入口仍会拒绝空训练划分。
+可显式运行同轨迹的优化器与评分检查：
+
+```bash
+advantage smoke-samples samples --output artifacts/real_samples_smoke_v1 --updates 200 --device cuda
+```
+
+无 GPU 时使用 `--device cpu`。输出目录必须为空。
+该命令核验真实文件 SHA256、维度、动作范围、时间索引，逐任务转换并训练 V/MC-Q，保存加载后计算五种分数。
+所有结果标记 `same_episode_smoke_only`，用于检查能否运行，不作为泛化、排序准确率或动作质量证据。
+检查输出为 `report.json`、`scores.csv`，以及每任务的 canonical 数据和模型；大型输出不上传 Git。
+首次成功末步奖励和失败时限终止依据样本 manifest 重建，尚未用仿真回放独立核验。

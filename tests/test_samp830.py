@@ -17,7 +17,7 @@ def _write_source(root, count=10):
     data.mkdir(parents=True)
     records = []
     for episode_id in range(count):
-        length = 4 if episode_id % 2 == 0 else 3
+        length = 3 if episode_id % 2 == 0 else 4
         success = episode_id % 2 == 0
         state = np.arange(length * 8, dtype=np.float32).reshape(length, 8) + episode_id
         action = np.zeros((length, 7), dtype=np.float32)
@@ -112,6 +112,25 @@ class Samp830ConversionTests(unittest.TestCase):
             source = _write_source(root / "source")
             with self.assertRaises(ValueError):
                 convert_task(source, 0, root / "canonical", root / "work", seed=1, task_horizon=2)
+
+
+    def test_failure_shorter_than_horizon_is_not_terminal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = _write_source(root / "source")
+            with self.assertRaisesRegex(ValueError,"failed rollout ends before task horizon"):
+                convert_task(source,0,root/"canonical",root/"work",task_horizon=5)
+
+    def test_manifest_task_mismatch_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            source=_write_source(root/"source")
+            path=source/"episode_manifest.jsonl"
+            records=[json.loads(line) for line in path.read_text().splitlines()]
+            records[0]["task_index"]=1
+            path.write_text("\n".join(json.dumps(row) for row in records)+"\n")
+            with self.assertRaisesRegex(ValueError,"task_index disagrees"):
+                convert_task(source,1,root/"canonical",root/"work",task_horizon=4)
 
 
 if __name__ == "__main__":

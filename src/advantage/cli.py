@@ -73,6 +73,9 @@ def main():
     qexp.add_argument("--output",required=True);qexp.add_argument("--seeds",type=int,nargs="+",default=[0,1,2])
     qexp.add_argument("--episodes",type=int,default=450);qexp.add_argument("--updates",type=int,default=1000)
     qexp.add_argument("--anchors",type=int,default=40);qexp.add_argument("--repeats",type=int,default=16)
+    smoke = sub.add_parser("smoke-samples")
+    smoke.add_argument("samples");smoke.add_argument("--output",required=True)
+    smoke.add_argument("--updates",type=int,default=200);smoke.add_argument("--device",default="cpu")
     args = parser.parse_args()
     if args.command == "synthetic":
         from .synthetic import experiment
@@ -166,6 +169,11 @@ def main():
     elif args.command == "synthetic-q":
         from .qexperiment import experiment
         print(json.dumps(experiment(args.output,args.seeds,args.episodes,args.updates,args.anchors,args.repeats)["summary"],indent=2))
+
+    elif args.command == "smoke-samples":
+        from .sample_smoke import run
+        report=run(args.samples,args.output,args.updates,args.device)
+        print(json.dumps({k:report[k] for k in ("status","scope","raw_samples","transitions","score_rows","device")},indent=2))
 
 
 if __name__ == "__main__":
