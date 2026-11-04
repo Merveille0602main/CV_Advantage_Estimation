@@ -1,0 +1,72 @@
+{
+  "scope": "same_episode_smoke_only",
+  "total_timestep_states": 1257,
+  "total_episodes": 4,
+  "tasks": [
+    {
+      "task_index": 9,
+      "task_id": "libero_10/task_9",
+      "success": true,
+      "episodes": 1,
+      "timestep_states": 147,
+      "unique_raw_state8_exact": 147,
+      "unique_with_remaining_time": 147,
+      "raw_state_dim": 8,
+      "v_input_dim": 9,
+      "optimizer_updates": 200,
+      "batch_size": 128,
+      "v_loss_first20_mean": 0.050687417399603876,
+      "v_loss_last20_mean": 1.4930153565728687e-05
+    },
+    {
+      "task_index": 19,
+      "task_id": "libero_goal/task_19",
+      "success": false,
+      "episodes": 1,
+      "timestep_states": 500,
+      "unique_raw_state8_exact": 500,
+      "unique_with_remaining_time": 500,
+      "raw_state_dim": 8,
+      "v_input_dim": 9,
+      "optimizer_updates": 200,
+      "batch_size": 128,
+      "v_loss_first20_mean": 0.0021234639894828432,
+      "v_loss_last20_mean": 1.911814399591094e-06
+    },
+    {
+      "task_index": 26,
+      "task_id": "libero_object/task_26",
+      "success": true,
+      "episodes": 1,
+      "timestep_states": 110,
+      "unique_raw_state8_exact": 110,
+      "unique_with_remaining_time": 110,
+      "raw_state_dim": 8,
+      "v_input_dim": 9,
+      "optimizer_updates": 200,
+      "batch_size": 128,
+      "v_loss_first20_mean": 0.056851697107777,
+      "v_loss_last20_mean": 5.363969066820573e-05
+    },
+    {
+      "task_index": 33,
+      "task_id": "libero_spatial/task_33",
+      "success": false,
+      "episodes": 1,
+      "timestep_states": 500,
+      "unique_raw_state8_exact": 500,
+      "unique_with_remaining_time": 500,
+      "raw_state_dim": 8,
+      "v_input_dim": 9,
+      "optimizer_updates": 200,
+      "batch_size": 128,
+      "v_loss_first20_mean": 0.002434695724514313,
+      "v_loss_last20_mean": 2.7130278510867358e-06
+    }
+  ],
+  "notes": [
+    "Raw state uniqueness uses exact float equality, not physical or statistical independence.",
+    "Terminal next observations are masked placeholders and are not counted as observed states.",
+    "Loss history comes from existing saved checkpoints; no training was repeated."
+  ]
+}

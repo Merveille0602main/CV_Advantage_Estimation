@@ -29,3 +29,22 @@ advantage smoke-samples samples --output artifacts/real_samples_smoke_v1 --updat
 样本来自 samp830/libero_40_suboptimal_v1，不是 RLinf RECAP 发布的数据集。
 源文件无逐步奖励和终止列，按样本清单重建末步成功奖励与时限终止；尚未用模拟器回放独立核验。
 当前只使用低维 state，未使用图像，不宣称已得到真实动作质量或泛化准确率。
+
+
+## 原运行曲线与状态计数
+
+图表读取原先保存的 checkpoint loss 历史与 scores.csv，没有重新训练。
+
+- [V loss 曲线](figures/v_loss.png)
+- [TD 与多步 TD 分数](figures/td_nstep.png)
+- [V 与同轨迹回报的拟合](figures/v_fit.png)
+- [逐次 loss 数据](figures/v_loss_history.csv)
+- [状态计数](figures/state_counts.json)
+
+四个任务各一条轨迹，当前状态样本依次为 147、500、110、500，总计 1257。
+每条轨迹内按原始八维状态完全相同去重后数量不变；这不代表统计独立，因为它们来自连续时间帧。
+V 输入为八维状态加剩余时长，总共九维；每任务独立训练一个 V，各更新 200 次，batch 为 128。
+
+这里使用同一条轨迹的实际 MC 回报拟合 V，再给该轨迹评分。若完全拟合，各跨度 TD 分数都会为零。
+因此当前 TD 曲线中的差异反映拟合残差，不能作为动作质量真值或方法优劣的证据。
+失败轨迹的奖励和 MC 回报均为零，低训练 loss 本身不能证明动作辨别能力。
