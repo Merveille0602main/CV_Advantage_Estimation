@@ -12,3 +12,6 @@ artifacts/
 .env
 !samples/
 !samples/*.parquet
+
+# Versioned small checkpoints from the four-task experiment.
+!reports/samp830_lowdim_v1/models/*.pt

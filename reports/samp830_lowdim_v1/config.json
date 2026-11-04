@@ -1,0 +1,40 @@
+{
+  "repository_commit": "6c00b283950e6957e42c259688aa10ad94260495",
+  "source_root": "data/raw/samp830",
+  "source_revision_declared": "71a88ad0eaa5f5dc5237e6ede56e7cc3d4a3e9e8",
+  "tasks": [
+    0,
+    13,
+    22,
+    31
+  ],
+  "split_seed": 12,
+  "train_seeds": [
+    0,
+    1,
+    2
+  ],
+  "gamma": 0.99,
+  "updates": 1000,
+  "optimizer": "Adam",
+  "learning_rate": 0.0003,
+  "batch_size": 128,
+  "hidden_layers": [
+    256,
+    256
+  ],
+  "state_dimensions": 8,
+  "action_dimensions": 7,
+  "lookaheads": [
+    1,
+    5,
+    10,
+    20
+  ],
+  "device": "cuda",
+  "torch_version": "2.7.1+cu128",
+  "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+  "reward": "1 on successful final transition; otherwise 0",
+  "horizon": 500,
+  "checkpoint_selection": "final fixed-budget checkpoint; no test-driven tuning"
+}

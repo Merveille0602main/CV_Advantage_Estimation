@@ -1,0 +1,492 @@
+{
+  "status": "complete",
+  "scope": "lowdim_observed_return_diagnostics_only",
+  "tasks": [
+    {
+      "task_index": 0,
+      "task": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "split": {
+        "train": {
+          "episodes": 17,
+          "success": 5,
+          "transitions": 7311,
+          "failure": 12
+        },
+        "validation": {
+          "episodes": 3,
+          "success": 1,
+          "transitions": 1277,
+          "failure": 2
+        },
+        "test": {
+          "episodes": 5,
+          "success": 3,
+          "transitions": 1775,
+          "failure": 2
+        }
+      },
+      "manifest_sha256": "47d6390765f2cbb4fbad353f9679a7c7d77ffcf99831b61340a6e80782ed4f3b",
+      "family_identity_verified": false
+    },
+    {
+      "task_index": 13,
+      "task": "put the cream cheese in the bowl",
+      "split": {
+        "train": {
+          "episodes": 17,
+          "success": 6,
+          "transitions": 6079,
+          "failure": 11
+        },
+        "validation": {
+          "episodes": 3,
+          "success": 3,
+          "transitions": 289,
+          "failure": 0
+        },
+        "test": {
+          "episodes": 5,
+          "success": 3,
+          "transitions": 1315,
+          "failure": 2
+        }
+      },
+      "manifest_sha256": "79c6a2385a032e37cff322093f01d09f1056380ef20c5ee8f9795285873803d8",
+      "family_identity_verified": false
+    },
+    {
+      "task_index": 22,
+      "task": "pick up the cream cheese and place it in the basket",
+      "split": {
+        "train": {
+          "episodes": 17,
+          "success": 12,
+          "transitions": 4509,
+          "failure": 5
+        },
+        "validation": {
+          "episodes": 3,
+          "success": 3,
+          "transitions": 549,
+          "failure": 0
+        },
+        "test": {
+          "episodes": 5,
+          "success": 3,
+          "transitions": 1454,
+          "failure": 2
+        }
+      },
+      "manifest_sha256": "8d17247bcdf2cb4f1c317c6e7c9e94fa8c003015319d2b05a70ed05eb20f5eec",
+      "family_identity_verified": false
+    },
+    {
+      "task_index": 31,
+      "task": "pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate",
+      "split": {
+        "train": {
+          "episodes": 17,
+          "success": 7,
+          "transitions": 6070,
+          "failure": 10
+        },
+        "validation": {
+          "episodes": 3,
+          "success": 3,
+          "transitions": 420,
+          "failure": 0
+        },
+        "test": {
+          "episodes": 5,
+          "success": 2,
+          "transitions": 1802,
+          "failure": 3
+        }
+      },
+      "manifest_sha256": "c433a3b0c0d8e7ccd77742fb8db7011e6323f474f8eb92bf7f6e443b0ce64b72",
+      "family_identity_verified": false
+    }
+  ],
+  "models": [
+    {
+      "task": 0,
+      "seed": 0,
+      "model": "V",
+      "path": "models/task_0_seed0_v.pt",
+      "sha256": "4c92bc3c431030a4a4fc02cbd15a8e8c94dd2540e2b873282d3957ac5c2aac2a",
+      "updates": 1000,
+      "first_100_loss_mean": 0.010865767602808774,
+      "last_100_loss_mean": 0.00042554636296699756
+    },
+    {
+      "task": 0,
+      "seed": 0,
+      "model": "Q",
+      "path": "models/task_0_seed0_q.pt",
+      "sha256": "134a0d7e762c43a3a73f348e24a18afe97289f20e38c8d3e7d4dd9162a164728",
+      "updates": 1000,
+      "first_100_loss_mean": 0.013817726485431194,
+      "last_100_loss_mean": 0.0006061739710276015
+    },
+    {
+      "task": 0,
+      "seed": 1,
+      "model": "V",
+      "path": "models/task_0_seed1_v.pt",
+      "sha256": "269f88550e0373fa41e5d38ba6e59ad630e7c0ba631d8313d7954257ae30a5eb",
+      "updates": 1000,
+      "first_100_loss_mean": 0.01261951848398894,
+      "last_100_loss_mean": 0.0004136128276877571
+    },
+    {
+      "task": 0,
+      "seed": 1,
+      "model": "Q",
+      "path": "models/task_0_seed1_q.pt",
+      "sha256": "ca3cf81f6909e98fb1419f3bc85dfe344c7bdacdf0499231d508653c02d102b9",
+      "updates": 1000,
+      "first_100_loss_mean": 0.012180165932513774,
+      "last_100_loss_mean": 0.0006098688874044456
+    },
+    {
+      "task": 0,
+      "seed": 2,
+      "model": "V",
+      "path": "models/task_0_seed2_v.pt",
+      "sha256": "2bc3345fab7cf415393e7bd7e1e833e4e8f4e6c223df94ee62cbb48822654c73",
+      "updates": 1000,
+      "first_100_loss_mean": 0.011756997290067375,
+      "last_100_loss_mean": 0.0005221130271092989
+    },
+    {
+      "task": 0,
+      "seed": 2,
+      "model": "Q",
+      "path": "models/task_0_seed2_q.pt",
+      "sha256": "0e29373e8fdb73fc7fd4ef3f6336cf902935f53c586a67acc392fba21f15f0af",
+      "updates": 1000,
+      "first_100_loss_mean": 0.018580853091552853,
+      "last_100_loss_mean": 0.0007815519373980351
+    },
+    {
+      "task": 13,
+      "seed": 0,
+      "model": "V",
+      "path": "models/task_13_seed0_v.pt",
+      "sha256": "ca607c800466899984f06fabcd91110a8f7a688c96331d97a8d7825b3e15e690",
+      "updates": 1000,
+      "first_100_loss_mean": 0.019769416926428675,
+      "last_100_loss_mean": 0.005047667869366706
+    },
+    {
+      "task": 13,
+      "seed": 0,
+      "model": "Q",
+      "path": "models/task_13_seed0_q.pt",
+      "sha256": "7e6c4799532a215eb77b4ddc2c43bee7c3b616ef01daa45dfebcc8b5f8c1a9f6",
+      "updates": 1000,
+      "first_100_loss_mean": 0.021702143950387835,
+      "last_100_loss_mean": 0.004297175667015835
+    },
+    {
+      "task": 13,
+      "seed": 1,
+      "model": "V",
+      "path": "models/task_13_seed1_v.pt",
+      "sha256": "c3ae87c3b1c2b6b1176f7237bac8e361488f896e9412411fb781782326c6951d",
+      "updates": 1000,
+      "first_100_loss_mean": 0.02004223839379847,
+      "last_100_loss_mean": 0.004785122328903526
+    },
+    {
+      "task": 13,
+      "seed": 1,
+      "model": "Q",
+      "path": "models/task_13_seed1_q.pt",
+      "sha256": "340a1fd4ded5f800b1f02019441a07208df2004e79df93a2f80205866a1f2d07",
+      "updates": 1000,
+      "first_100_loss_mean": 0.020892092688009144,
+      "last_100_loss_mean": 0.0038072743220254777
+    },
+    {
+      "task": 13,
+      "seed": 2,
+      "model": "V",
+      "path": "models/task_13_seed2_v.pt",
+      "sha256": "cace5924552cba6a95cebeff78c0dafeb32dfbaef5a1d510658a12cb1d15942e",
+      "updates": 1000,
+      "first_100_loss_mean": 0.0199658109433949,
+      "last_100_loss_mean": 0.004977281705942005
+    },
+    {
+      "task": 13,
+      "seed": 2,
+      "model": "Q",
+      "path": "models/task_13_seed2_q.pt",
+      "sha256": "d4947b88c69aa47430cd9614717f621ab51a4f7792693ea5f101222f0831b819",
+      "updates": 1000,
+      "first_100_loss_mean": 0.02877967869862914,
+      "last_100_loss_mean": 0.004623080331366509
+    },
+    {
+      "task": 22,
+      "seed": 0,
+      "model": "V",
+      "path": "models/task_22_seed0_v.pt",
+      "sha256": "bccda9fee6ac713d893c1eae8186ebaa3c35526e3fe4e675b2611b9992d75b11",
+      "updates": 1000,
+      "first_100_loss_mean": 0.016691442169249057,
+      "last_100_loss_mean": 0.0023678004334215077
+    },
+    {
+      "task": 22,
+      "seed": 0,
+      "model": "Q",
+      "path": "models/task_22_seed0_q.pt",
+      "sha256": "5076496b8c3ec1ac9b2ad6b5f73b6140f45c56143c154457ccfd8f73875c503f",
+      "updates": 1000,
+      "first_100_loss_mean": 0.018537129238247872,
+      "last_100_loss_mean": 0.001985136700095609
+    },
+    {
+      "task": 22,
+      "seed": 1,
+      "model": "V",
+      "path": "models/task_22_seed1_v.pt",
+      "sha256": "266433ca5e72e2fa87b53dff0fe04b2649947bb06509ba719a1a0904a8a91426",
+      "updates": 1000,
+      "first_100_loss_mean": 0.02163219263777137,
+      "last_100_loss_mean": 0.002284115948714316
+    },
+    {
+      "task": 22,
+      "seed": 1,
+      "model": "Q",
+      "path": "models/task_22_seed1_q.pt",
+      "sha256": "062b85cd5d225fd80de22ce247d95083cb0b96b357fb83c05d87e12322fdee24",
+      "updates": 1000,
+      "first_100_loss_mean": 0.01780212659854442,
+      "last_100_loss_mean": 0.0018459614319726826
+    },
+    {
+      "task": 22,
+      "seed": 2,
+      "model": "V",
+      "path": "models/task_22_seed2_v.pt",
+      "sha256": "00571b4d6cd7395f3d98eafe0e1d8e43ca01a58802af7d4ffd0487df541c68be",
+      "updates": 1000,
+      "first_100_loss_mean": 0.02044772990979254,
+      "last_100_loss_mean": 0.00281158059136942
+    },
+    {
+      "task": 22,
+      "seed": 2,
+      "model": "Q",
+      "path": "models/task_22_seed2_q.pt",
+      "sha256": "9fef6da3343d19d9977977c1119f738a355da6381fe206515bff25e078980a9d",
+      "updates": 1000,
+      "first_100_loss_mean": 0.03075963191688061,
+      "last_100_loss_mean": 0.002586057528387755
+    },
+    {
+      "task": 31,
+      "seed": 0,
+      "model": "V",
+      "path": "models/task_31_seed0_v.pt",
+      "sha256": "d23ed6e4c0582f88489c3850f386eb5b0c7b2893966df8c1d25efdd3479927f2",
+      "updates": 1000,
+      "first_100_loss_mean": 0.015366302859038115,
+      "last_100_loss_mean": 0.005215217275545001
+    },
+    {
+      "task": 31,
+      "seed": 0,
+      "model": "Q",
+      "path": "models/task_31_seed0_q.pt",
+      "sha256": "71b7798457b735b717509e586a2122b493d7910b4570012263dd637bff3585c7",
+      "updates": 1000,
+      "first_100_loss_mean": 0.017910160683095457,
+      "last_100_loss_mean": 0.0038528168806806207
+    },
+    {
+      "task": 31,
+      "seed": 1,
+      "model": "V",
+      "path": "models/task_31_seed1_v.pt",
+      "sha256": "4befcf8f6291df7fe8e79644b62873c9abcd56d07697037833b4626e20bd7190",
+      "updates": 1000,
+      "first_100_loss_mean": 0.01790696568787098,
+      "last_100_loss_mean": 0.005539562569465488
+    },
+    {
+      "task": 31,
+      "seed": 1,
+      "model": "Q",
+      "path": "models/task_31_seed1_q.pt",
+      "sha256": "8978a2e413ffdbbad3a3f04b2611d83ccdf57b67e077866d23ee6c9dda9ebcf0",
+      "updates": 1000,
+      "first_100_loss_mean": 0.01554808730725199,
+      "last_100_loss_mean": 0.0042065753787755965
+    },
+    {
+      "task": 31,
+      "seed": 2,
+      "model": "V",
+      "path": "models/task_31_seed2_v.pt",
+      "sha256": "968ad74f30a1a7375c9fbb3d353bdce17e950eae2442d1aebe6dbd475d706525",
+      "updates": 1000,
+      "first_100_loss_mean": 0.015467507936991752,
+      "last_100_loss_mean": 0.005101424192544073
+    },
+    {
+      "task": 31,
+      "seed": 2,
+      "model": "Q",
+      "path": "models/task_31_seed2_q.pt",
+      "sha256": "af9096bfba0d9e0406b13202031148c448074fbbdaa55fe4474519f44e5b61a4",
+      "updates": 1000,
+      "first_100_loss_mean": 0.021651091007515787,
+      "last_100_loss_mean": 0.004173890990205109
+    }
+  ],
+  "metric_summary": [
+    {
+      "task": 0,
+      "split": "validation",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.14602410076609115,
+      "seed_std": 0.014993345116254704,
+      "train_mean_baseline_rmse": 0.16779463939925657
+    },
+    {
+      "task": 0,
+      "split": "validation",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.15879382698357092,
+      "seed_std": 0.004934732193658367,
+      "train_mean_baseline_rmse": 0.16779463939925657
+    },
+    {
+      "task": 0,
+      "split": "test",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.23638363727549647,
+      "seed_std": 0.022378185614266216,
+      "train_mean_baseline_rmse": 0.2598053374144752
+    },
+    {
+      "task": 0,
+      "split": "test",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.2110863879468148,
+      "seed_std": 0.015264747762829432,
+      "train_mean_baseline_rmse": 0.2598053374144752
+    },
+    {
+      "task": 13,
+      "split": "validation",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.22935636506452853,
+      "seed_std": 0.015563740743196362,
+      "train_mean_baseline_rmse": 0.6098796947121253
+    },
+    {
+      "task": 13,
+      "split": "validation",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.2731333910714376,
+      "seed_std": 0.008236682819797572,
+      "train_mean_baseline_rmse": 0.6098796947121253
+    },
+    {
+      "task": 13,
+      "split": "test",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.14496321071991466,
+      "seed_std": 0.0014602162626663109,
+      "train_mean_baseline_rmse": 0.37885672696038764
+    },
+    {
+      "task": 13,
+      "split": "test",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.1621341631319903,
+      "seed_std": 0.004534796370585721,
+      "train_mean_baseline_rmse": 0.37885672696038764
+    },
+    {
+      "task": 22,
+      "split": "validation",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.1451438684968257,
+      "seed_std": 0.004917063726259158,
+      "train_mean_baseline_rmse": 0.35591229854523854
+    },
+    {
+      "task": 22,
+      "split": "validation",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.13308199421247013,
+      "seed_std": 0.008466986077774092,
+      "train_mean_baseline_rmse": 0.35591229854523854
+    },
+    {
+      "task": 22,
+      "split": "test",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.17248351823965025,
+      "seed_std": 0.00805011449121945,
+      "train_mean_baseline_rmse": 0.31100158167492264
+    },
+    {
+      "task": 22,
+      "split": "test",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.1611067614033049,
+      "seed_std": 0.007308260427756651,
+      "train_mean_baseline_rmse": 0.31100158167492264
+    },
+    {
+      "task": 31,
+      "split": "validation",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.16877787884499093,
+      "seed_std": 0.01879121266604438,
+      "train_mean_baseline_rmse": 0.49966416482300025
+    },
+    {
+      "task": 31,
+      "split": "validation",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.1621524791451547,
+      "seed_std": 0.015832654583074802,
+      "train_mean_baseline_rmse": 0.49966416482300025
+    },
+    {
+      "task": 31,
+      "split": "test",
+      "model": "V",
+      "episode_macro_rmse_mean": 0.2178525403242022,
+      "seed_std": 0.01171029445122989,
+      "train_mean_baseline_rmse": 0.24697519115549976
+    },
+    {
+      "task": 31,
+      "split": "test",
+      "model": "Q",
+      "episode_macro_rmse_mean": 0.23717086628720105,
+      "seed_std": 0.023651611939471757,
+      "train_mean_baseline_rmse": 0.24697519115549976
+    }
+  ],
+  "training_models": 24,
+  "smoke_models": 2,
+  "selected_episodes": 100,
+  "selected_transitions": 32850,
+  "raw_bytes_hashed": 2953819392,
+  "score_rows": 133215,
+  "tests": 30,
+  "original_environment_preserved": true,
+  "raw_vs_canonical_exact_audited": true,
+  "independent_advantage_labels_available": false
+}

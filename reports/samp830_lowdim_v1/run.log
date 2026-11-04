@@ -1,0 +1,74 @@
+RUN /mnt/d/CV/training_runs/samp830_lowdim_v1/20261104_212851
+CUDA PASS 2.7.1+cu128 NVIDIA GeForce RTX 5060 Laptop GPU
+
+----------------------------------------------------------------------
+Ran 30 tests in 1.834s
+
+OK
+CONVERT task=0
+CONVERT task=13
+CONVERT task=22
+CONVERT task=31
+Task 0 short CUDA training and reload/scoring check
+SMOKE PASS
+TRAIN task=0 seed=0 V
+{"training_episodes": 17, "last_loss": 0.00032739818561822176}
+TRAIN task=0 seed=0 Q
+{"train_episodes": 17, "last_loss": 0.0007790465606376529}
+DONE task=0 seed=0
+TRAIN task=0 seed=1 V
+{"training_episodes": 17, "last_loss": 0.0006192232249304652}
+TRAIN task=0 seed=1 Q
+{"train_episodes": 17, "last_loss": 0.0009848589543253183}
+DONE task=0 seed=1
+TRAIN task=0 seed=2 V
+{"training_episodes": 17, "last_loss": 0.0004819736641366035}
+TRAIN task=0 seed=2 Q
+{"train_episodes": 17, "last_loss": 0.0005720988847315311}
+DONE task=0 seed=2
+TRAIN task=13 seed=0 V
+{"training_episodes": 17, "last_loss": 0.007026584818959236}
+TRAIN task=13 seed=0 Q
+{"train_episodes": 17, "last_loss": 0.005952893756330013}
+DONE task=13 seed=0
+TRAIN task=13 seed=1 V
+{"training_episodes": 17, "last_loss": 0.004322289489209652}
+TRAIN task=13 seed=1 Q
+{"train_episodes": 17, "last_loss": 0.0038080313242971897}
+DONE task=13 seed=1
+TRAIN task=13 seed=2 V
+{"training_episodes": 17, "last_loss": 0.004405060783028603}
+TRAIN task=13 seed=2 Q
+{"train_episodes": 17, "last_loss": 0.007987660355865955}
+DONE task=13 seed=2
+TRAIN task=22 seed=0 V
+{"training_episodes": 17, "last_loss": 0.001974356360733509}
+TRAIN task=22 seed=0 Q
+{"train_episodes": 17, "last_loss": 0.0015003436710685492}
+DONE task=22 seed=0
+TRAIN task=22 seed=1 V
+{"training_episodes": 17, "last_loss": 0.00241668289527297}
+TRAIN task=22 seed=1 Q
+{"train_episodes": 17, "last_loss": 0.0012063976610079408}
+DONE task=22 seed=1
+TRAIN task=22 seed=2 V
+{"training_episodes": 17, "last_loss": 0.00275497417896986}
+TRAIN task=22 seed=2 Q
+{"train_episodes": 17, "last_loss": 0.0025085106026381254}
+DONE task=22 seed=2
+TRAIN task=31 seed=0 V
+{"training_episodes": 17, "last_loss": 0.005457306746393442}
+TRAIN task=31 seed=0 Q
+{"train_episodes": 17, "last_loss": 0.006774641573429108}
+DONE task=31 seed=0
+TRAIN task=31 seed=1 V
+{"training_episodes": 17, "last_loss": 0.0045150648802518845}
+TRAIN task=31 seed=1 Q
+{"train_episodes": 17, "last_loss": 0.0033904798328876495}
+DONE task=31 seed=1
+TRAIN task=31 seed=2 V
+{"training_episodes": 17, "last_loss": 0.005968860350549221}
+TRAIN task=31 seed=2 Q
+{"train_episodes": 17, "last_loss": 0.005903874523937702}
+DONE task=31 seed=2
+TRAINING COMPLETE /mnt/d/CV/training_runs/samp830_lowdim_v1/20261104_212851

@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "split_seed": 12,
+  "split": {
+    "train": [
+      "samp830-libero40-v1:776",
+      "samp830-libero40-v1:777",
+      "samp830-libero40-v1:778",
+      "samp830-libero40-v1:779",
+      "samp830-libero40-v1:780",
+      "samp830-libero40-v1:781",
+      "samp830-libero40-v1:782",
+      "samp830-libero40-v1:784",
+      "samp830-libero40-v1:786",
+      "samp830-libero40-v1:787",
+      "samp830-libero40-v1:788",
+      "samp830-libero40-v1:789",
+      "samp830-libero40-v1:790",
+      "samp830-libero40-v1:792",
+      "samp830-libero40-v1:795",
+      "samp830-libero40-v1:796",
+      "samp830-libero40-v1:798"
+    ],
+    "validation": [
+      "samp830-libero40-v1:785",
+      "samp830-libero40-v1:791",
+      "samp830-libero40-v1:797"
+    ],
+    "test": [
+      "samp830-libero40-v1:775",
+      "samp830-libero40-v1:783",
+      "samp830-libero40-v1:793",
+      "samp830-libero40-v1:794",
+      "samp830-libero40-v1:799"
+    ]
+  },
+  "episodes": [
+    {
+      "episode_id": "samp830-libero40-v1:775",
+      "parent_id": "samp830-libero40-v1:775",
+      "path": "episode_000000.npz",
+      "sha256": "052f663a76d8c47142f271646408ffa6c2217dfa9a3dd81dca13b46b9b50322f",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:776",
+      "parent_id": "samp830-libero40-v1:776",
+      "path": "episode_000001.npz",
+      "sha256": "d6248941f517037b06e505938afe0ed6263d5dd943311c99c61f98c0264f551f",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:777",
+      "parent_id": "samp830-libero40-v1:777",
+      "path": "episode_000002.npz",
+      "sha256": "8c7ccf5ffb00e85720a8e841b31c1aa676808a81ae04a0af5fbf6fc6c19e91b4",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:778",
+      "parent_id": "samp830-libero40-v1:778",
+      "path": "episode_000003.npz",
+      "sha256": "d54a7aa7c315354edce0c15ef0018fe4b1084a5b4ae2e5a4e0dc8608e5fbd55c",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:779",
+      "parent_id": "samp830-libero40-v1:779",
+      "path": "episode_000004.npz",
+      "sha256": "96ca1e106b9a303499d83aed77157fbc655a9c30b0421e80036b371f0634702c",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:780",
+      "parent_id": "samp830-libero40-v1:780",
+      "path": "episode_000005.npz",
+      "sha256": "b8607392b2002e5b05e1993d4c95a0c5c8fe71ebef5aee08de05cb08c014e628",
+      "transitions": 139
+    },
+    {
+      "episode_id": "samp830-libero40-v1:781",
+      "parent_id": "samp830-libero40-v1:781",
+      "path": "episode_000006.npz",
+      "sha256": "1031a897856d5a548613ab9b1ee684d8be9d8404f21f0b32593949b465f28b7b",
+      "transitions": 143
+    },
+    {
+      "episode_id": "samp830-libero40-v1:782",
+      "parent_id": "samp830-libero40-v1:782",
+      "path": "episode_000007.npz",
+      "sha256": "ad88864f62763b86dbe851bd0261522ec197dd24df61be857d527ce187fe6a15",
+      "transitions": 153
+    },
+    {
+      "episode_id": "samp830-libero40-v1:783",
+      "parent_id": "samp830-libero40-v1:783",
+      "path": "episode_000008.npz",
+      "sha256": "b49c7441bf6b2e5fc1b817ef6884988af17450229101c718a52f15aaf52108e4",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:784",
+      "parent_id": "samp830-libero40-v1:784",
+      "path": "episode_000009.npz",
+      "sha256": "3cec6e7a8f1c06f3d205740cc392438376ce9c3840f7efb50185b365883d2908",
+      "transitions": 139
+    },
+    {
+      "episode_id": "samp830-libero40-v1:785",
+      "parent_id": "samp830-libero40-v1:785",
+      "path": "episode_000010.npz",
+      "sha256": "fab234d219a46d8df84d37303f91d50ade04845b4257fded598446b519cdb46d",
+      "transitions": 162
+    },
+    {
+      "episode_id": "samp830-libero40-v1:786",
+      "parent_id": "samp830-libero40-v1:786",
+      "path": "episode_000011.npz",
+      "sha256": "faa98620a88ccdd8c36223fa9138a8634587eb558d2a74462e9430164349f201",
+      "transitions": 148
+    },
+    {
+      "episode_id": "samp830-libero40-v1:787",
+      "parent_id": "samp830-libero40-v1:787",
+      "path": "episode_000012.npz",
+      "sha256": "91f7d5d8b4d7be247d601f94485ae3bd353aab0363f18e26a3be078a25b4fe5c",
+      "transitions": 176
+    },
+    {
+      "episode_id": "samp830-libero40-v1:788",
+      "parent_id": "samp830-libero40-v1:788",
+      "path": "episode_000013.npz",
+      "sha256": "4db79f8804c2f33c9b6391ae52bd28b373fadccd9b3148451c9bf9362a054709",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:789",
+      "parent_id": "samp830-libero40-v1:789",
+      "path": "episode_000014.npz",
+      "sha256": "dc9c4c0c7678d2285cae8e17fbcad8a1330a71b4cfa5dbbee7461291ca1f9e43",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:790",
+      "parent_id": "samp830-libero40-v1:790",
+      "path": "episode_000015.npz",
+      "sha256": "b9585baae28e3bc845bf7750db82d40e69020a72f871631aa52ddb93ff572926",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:791",
+      "parent_id": "samp830-libero40-v1:791",
+      "path": "episode_000016.npz",
+      "sha256": "908ef8a15b0636415864504bef562173b71a7911ffcc1af14f31e7dda1b50608",
+      "transitions": 132
+    },
+    {
+      "episode_id": "samp830-libero40-v1:792",
+      "parent_id": "samp830-libero40-v1:792",
+      "path": "episode_000017.npz",
+      "sha256": "f3e088f043f2a5ac53f7184cc17acca712a5fd5a0c70fedc7afb21d0c4757ac8",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:793",
+      "parent_id": "samp830-libero40-v1:793",
+      "path": "episode_000018.npz",
+      "sha256": "88dd72d2b46dd4c1281710fcd128130089365a035160d995d94c9763373d5b08",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:794",
+      "parent_id": "samp830-libero40-v1:794",
+      "path": "episode_000019.npz",
+      "sha256": "7ba7ab22dca667032afbc38bc3daf4a10e7602109d25b3cdc1ecba787398af53",
+      "transitions": 163
+    },
+    {
+      "episode_id": "samp830-libero40-v1:795",
+      "parent_id": "samp830-libero40-v1:795",
+      "path": "episode_000020.npz",
+      "sha256": "674d507eb431d5ef4eafac96f61ca5c77948ea669475753d551aac8be94d71fa",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:796",
+      "parent_id": "samp830-libero40-v1:796",
+      "path": "episode_000021.npz",
+      "sha256": "748eb09b5020b62bbe0f9b40499f7c81c7f121ac6afb9218423b740c00cfc868",
+      "transitions": 500
+    },
+    {
+      "episode_id": "samp830-libero40-v1:797",
+      "parent_id": "samp830-libero40-v1:797",
+      "path": "episode_000022.npz",
+      "sha256": "6105c2da22dfe9d3eebc5e655afabdda3fe6abae942a8ae61db0a70798bfc4ff",
+      "transitions": 126
+    },
+    {
+      "episode_id": "samp830-libero40-v1:798",
+      "parent_id": "samp830-libero40-v1:798",
+      "path": "episode_000023.npz",
+      "sha256": "8065cb5398fb693999361128e78c14f168212d36e9c29a926c60c569daf163a3",
+      "transitions": 172
+    },
+    {
+      "episode_id": "samp830-libero40-v1:799",
+      "parent_id": "samp830-libero40-v1:799",
+      "path": "episode_000024.npz",
+      "sha256": "4c7bb7fc48a499f7e3ba2e2f400081ce9f1e5113198f8b37d4018a0c539c6ff0",
+      "transitions": 139
+    }
+  ],
+  "note": "Manifest of the audited run. NPZ hashes include run-specific metadata; regenerated hashes can differ with absolute paths."
+}
