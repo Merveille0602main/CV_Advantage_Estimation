@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cv-advantage-estimation"
+version = "0.1.0"
+description = "Auditable TD and N-step tools for offline robot trajectories"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.22,<2"]
+
+[project.optional-dependencies]
+rlinf = ["pyarrow>=12,<18"]
+plots = ["matplotlib>=3.5,<4"]
+
+[project.scripts]
+advantage = "advantage.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

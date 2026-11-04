@@ -1,0 +1,12 @@
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+data/
+artifacts/
+*.npz
+*.pt
+*.parquet
+*.hdf5
+*.h5
+.env

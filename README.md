@@ -1,1 +1,83 @@
-# CV_Advantage_Estimation
+# CV Advantage Estimation
+
+机器人离线轨迹的 TD / N-step 工具、统一数据契约，以及可复现的人工轨迹实验。
+
+当前阶段：数值语义与人工实验。真实 RLinf 数据仍在下载；没有宣称完成真实数据训练或动作质量评价。
+
+## 安装与运行
+
+在 WSL 的现有 ML 环境中：
+
+```bash
+conda activate ML
+cd /home/merveille/CV_Advantage_Estimation
+pip install -e '.[rlinf,plots]'
+python -m unittest discover -s tests -v
+advantage synthetic --output artifacts/synthetic_v1 --seeds 0 1 2
+```
+
+核心工具仅依赖 NumPy。RLinf 适配额外使用 PyArrow；图表额外使用 Matplotlib。
+真实低维 V 学习器使用 ML 环境已有的 PyTorch，不会安装整个 RLinf 或大型策略模型。
+
+## 两类接口，避免混淆
+
+- `td_targets` / `n_step_targets`：生成学习 V 的回归目标。
+- `td_scores` / `n_step_scores`：从目标中减去当前 V，生成回顾式动作评分。
+- `discounted_returns`：反向计算完整折扣回报；截断轨迹必须显式提供尾部 bootstrap。
+
+```python
+from advantage import td_targets, n_step_scores
+
+# ep 为一条经过校验的 Episode；value_fn 必须包含剩余时间信息。
+next_values = value_fn(ep.next_obs, ep.remaining_steps - 1)
+values = value_fn(ep.obs, ep.remaining_steps)
+training_targets = td_targets(ep, next_values, gamma=0.99)
+scores = n_step_scores(ep, values, next_values, n=5, gamma=0.99)
+```
+
+单步 N-step 与一步 TD 相同。真正终止后不 bootstrap；采集中断必须用真实的末尾 next_obs bootstrap。
+每次只处理一条轨迹，任何跨度都不会越过轨迹边界。分数读取了动作后的真实未来，不能冒充执行前评分。
+
+## 已实现的数据接口
+
+见 [数据契约](docs/DATA_CONTRACT.md)。原生格式为无 pickle 的 NPZ，每条轨迹一文件；manifest 保存 SHA256、家族和 split。
+
+RLinf RECAP 官方说明采用 LeRobot 格式，原始奖励可以来自独立的 `meta/returns_{tag}.parquet`。
+本项目按 `episode_index` 和 `frame_index` 严格合并，而不按文件行序合并。
+
+```bash
+advantage inspect-rlinf /path/to/downloaded_dataset
+# 复制并逐项核实 configs/rlinf_lerobot.example.json；模板故意不直接接受未知动作/终止语义。
+advantage convert-rlinf /path/to/downloaded_dataset \
+  --config configs/confirmed_dataset.json --output data/canonical_v1
+advantage train data/canonical_v1 --n 1 --updates 1000 --device cuda --output artifacts/td1_seed0.pt
+advantage train data/canonical_v1 --n 5 --updates 1000 --device cuda --output artifacts/n5_seed0.pt
+```
+
+适配器已通过人工 Parquet 文件的读写、奖励合并和终止检查；真实样本到达后还需确认字段、奖励时间、动作 chunk、任务时限、参考策略及家族标识。
+第一版只导入低维状态，不解码视频。只含图像的数据应先增加独立且版本固定的特征提取器，不能自动把图像展平当低维状态。
+`train` 只读取 manifest 中的训练轨迹及其奖励；不读取 test、现成 advantage 标签或 oracle。
+
+## 人工轨迹实验
+
+一个有限时域的随机“推进任务”模型：动作可推进、停留或失败；首次到达目标给成功奖励；固定随机参考策略。
+状态包含任务进度和剩余时间。精确动态规划可得评价用的真实 V 和动作 advantage，不向训练泄漏。
+
+1. **学习 V 对比**：同一批训练轨迹、零初始化、相同更新轮数和学习率，用 TD1、N5、N10、N20 目标分别学习表格 V。记录测试状态上的真实 V 误差和学习曲线。
+2. **固定 V 评分对比**：仅用训练轨迹的完整回报拟合一个共享 V，在相同测试轨迹上改变评分跨度，报告对精确 advantage 的误差。
+
+第一项隔离目标传播机制，不代表神经网络性能；第二项受后续随机动作影响，不是同状态反事实排序准确率。
+模型使用全训练批次的同步半梯度更新，长跨度目标的计算成本更高，等轮数不等计算时间。
+数据按整条独立轨迹家族划分；预留 validation，当前固定实验预算不调参。默认三个随机数据种子。
+
+输出 `results.json`、`metrics.csv`、`learning_curves.csv`、`scores.csv`、分组清单、模型表、样例 NPZ 和 `comparison.png`。
+输出目录必须为空，避免覆盖旧实验。完整生成数据保留本地；只推送精简结果和源代码。
+
+## 下一步
+
+下载完成后先运行字段检查，审计少量真实轨迹，再确认映射配置。
+混合多个采集策略不能直接声称估计同一固定策略的 V；若用不同策略的示范，需要重新界定估计目标。
+训练小型 MLP 的初步诊断不能替代独立质量标签、同状态排序或实际机器人评价。
+
+参考：[RLinf RECAP 官方数据及流程](https://rlinf.readthedocs.io/en/latest/rst_source/examples/embodied/recap.html)。
+RLinf 自身的奖励定义与归一化可以不同；本工具读取原始 reward 并由配置确定折扣，不自动照搬归一化 advantage。

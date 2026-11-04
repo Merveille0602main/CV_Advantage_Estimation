@@ -1,0 +1,15 @@
+{
+  "source_id": "replace-with-dataset-and-version",
+  "policy_id": "replace-with-collector-checkpoint-and-randomization",
+  "task_id": "replace-with-confirmed-task",
+  "task_horizon": 300,
+  "state_columns": ["observation.state"],
+  "action_column": "action",
+  "reward_column": "reward",
+  "reward_sidecar": "meta/returns_YOUR_TAG.parquet",
+  "episode_column": "episode_index",
+  "frame_column": "frame_index",
+  "rows_are_primitive_transitions": false,
+  "episode_end_is_terminal": false,
+  "feature_version": "lowdim-v1"
+}
