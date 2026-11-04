@@ -1,0 +1,173 @@
+{
+  "config": {
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "episodes_per_seed": 450,
+    "epochs": 120,
+    "gamma": 0.99,
+    "horizon": 24,
+    "learning_rate": 0.2,
+    "learner": "synchronous tabular semi-gradient, full training batch"
+  },
+  "summary": [
+    {
+      "n": 1,
+      "test_v_rmse_mean": 0.07004732059126194,
+      "test_v_rmse_std": 0.029722164582669096,
+      "shared_v_score_rmse_mean": 0.2071292579053352,
+      "shared_v_score_rmse_std": 0.006533610926595669
+    },
+    {
+      "n": 5,
+      "test_v_rmse_mean": 0.07452137421080642,
+      "test_v_rmse_std": 0.029630759645709954,
+      "shared_v_score_rmse_mean": 0.3687457396833364,
+      "shared_v_score_rmse_std": 0.01789451669755477
+    },
+    {
+      "n": 10,
+      "test_v_rmse_mean": 0.07536036622430763,
+      "test_v_rmse_std": 0.02960752825450527,
+      "shared_v_score_rmse_mean": 0.40886416654826885,
+      "shared_v_score_rmse_std": 0.016937702774593583
+    },
+    {
+      "n": 20,
+      "test_v_rmse_mean": 0.07537787029144132,
+      "test_v_rmse_std": 0.029621318024140027,
+      "shared_v_score_rmse_mean": 0.4085604746075848,
+      "shared_v_score_rmse_std": 0.018692137247369255
+    }
+  ],
+  "runs": [
+    {
+      "seed": 0,
+      "n": 1,
+      "test_v_rmse": 0.02857853600957649,
+      "shared_v_score_rmse": 0.21251003956774014,
+      "test_state_coverage": 1.0,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6155555555555555
+    },
+    {
+      "seed": 0,
+      "n": 5,
+      "test_v_rmse": 0.03350392358701798,
+      "shared_v_score_rmse": 0.3894517609699618,
+      "test_state_coverage": 1.0,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6155555555555555
+    },
+    {
+      "seed": 0,
+      "n": 10,
+      "test_v_rmse": 0.034673307568234356,
+      "shared_v_score_rmse": 0.4290991818464291,
+      "test_state_coverage": 1.0,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6155555555555555
+    },
+    {
+      "seed": 0,
+      "n": 20,
+      "test_v_rmse": 0.03467777759501936,
+      "shared_v_score_rmse": 0.43059386127768545,
+      "test_state_coverage": 1.0,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6155555555555555
+    },
+    {
+      "seed": 1,
+      "n": 1,
+      "test_v_rmse": 0.09672860536534574,
+      "shared_v_score_rmse": 0.210944057243247,
+      "test_state_coverage": 0.9885433715220949,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6266666666666667
+    },
+    {
+      "seed": 1,
+      "n": 5,
+      "test_v_rmse": 0.10245636601512861,
+      "shared_v_score_rmse": 0.370992971244718,
+      "test_state_coverage": 0.9885433715220949,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6266666666666667
+    },
+    {
+      "seed": 1,
+      "n": 10,
+      "test_v_rmse": 0.10426724988636148,
+      "shared_v_score_rmse": 0.4098478651324378,
+      "test_state_coverage": 0.9885433715220949,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6266666666666667
+    },
+    {
+      "seed": 1,
+      "n": 20,
+      "test_v_rmse": 0.10431631364420792,
+      "shared_v_score_rmse": 0.4101925518134252,
+      "test_state_coverage": 0.9885433715220949,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6266666666666667
+    },
+    {
+      "seed": 2,
+      "n": 1,
+      "test_v_rmse": 0.0848348203988636,
+      "shared_v_score_rmse": 0.1979336769050185,
+      "test_state_coverage": 0.993127147766323,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6377777777777778
+    },
+    {
+      "seed": 2,
+      "n": 5,
+      "test_v_rmse": 0.08760383303027267,
+      "shared_v_score_rmse": 0.3457924868353293,
+      "test_state_coverage": 0.993127147766323,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6377777777777778
+    },
+    {
+      "seed": 2,
+      "n": 10,
+      "test_v_rmse": 0.08714054121832705,
+      "shared_v_score_rmse": 0.38764545266593964,
+      "test_state_coverage": 0.993127147766323,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6377777777777778
+    },
+    {
+      "seed": 2,
+      "n": 20,
+      "test_v_rmse": 0.08713951963509663,
+      "shared_v_score_rmse": 0.38489501073164367,
+      "test_state_coverage": 0.993127147766323,
+      "train_episodes": 315,
+      "test_episodes": 91,
+      "success_rate": 0.6377777777777778
+    }
+  ],
+  "limitations": [
+    "Toy MDP only; no real robot or RLinf performance claim.",
+    "Equal epochs and transition data; longer n consumes more target-construction CPU.",
+    "Score error includes future rollout randomness; it is not a counterfactual ranking metric.",
+    "DP oracle is evaluation-only; validation split reserved and not used to tune settings."
+  ]
+}

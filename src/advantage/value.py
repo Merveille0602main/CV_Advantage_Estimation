@@ -1,15 +1,19 @@
 """Small PyTorch V learner for canonical low-dimensional data (optional torch)."""
 import numpy as np
-from .targets import n_step_targets
+from .targets import n_step_targets, discounted_returns
 
 
 def fit_value(episodes, n=1, gamma=0.99, updates=1000, batch_size=128,
-              seed=0, lr=3e-4, target_refresh=20, device="cpu"):
+              seed=0, lr=3e-4, target_refresh=20, device="cpu", method="mc"):
     import torch
     if not episodes or updates < 1 or batch_size < 1 or target_refresh < 1:
         raise ValueError("nonempty episodes and positive training budgets required")
     if len({e.policy_id for e in episodes}) != 1 or len({e.task_id for e in episodes}) != 1:
         raise ValueError("first version trains a single task and fixed reference policy")
+    if method not in ("mc", "nstep"):
+        raise ValueError("method must be mc or nstep")
+    # Main protocol: regress complete TRAIN returns, then freeze ONE V for all scores.
+    mc_targets = np.concatenate([discounted_returns(e, gamma) for e in episodes]) if method == "mc" else None
     torch.manual_seed(seed)
     if device.startswith("cuda"):
         torch.cuda.manual_seed_all(seed)
@@ -30,9 +34,9 @@ def fit_value(episodes, n=1, gamma=0.99, updates=1000, batch_size=128,
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     losses = []
     for step in range(updates):
-        if step % target_refresh == 0:
+        if step == 0 or (method == "nstep" and step % target_refresh == 0):
             with torch.no_grad():
-                targets = np.concatenate([n_step_targets(
+                targets = mc_targets if method == "mc" else np.concatenate([n_step_targets(
                     e, model(tensor(features(e, True))).squeeze(-1).cpu().numpy(), n, gamma) for e in episodes])
             ty = torch.as_tensor(targets, dtype=torch.float32, device=device)
         ix = torch.as_tensor(rng.integers(len(x), size=batch_size), device=device)
@@ -43,5 +47,33 @@ def fit_value(episodes, n=1, gamma=0.99, updates=1000, batch_size=128,
         losses.append(float(loss.detach().cpu()))
     return {"state_dict": model.cpu().state_dict(), "input_dim": x.shape[1],
             "mean": mean.tolist(), "scale": scale.tolist(), "horizon": horizon,
-            "n": n, "gamma": gamma, "seed": seed, "losses": losses,
+            "method": method, "n": n if method == "nstep" else None,
+            "task_id": episodes[0].task_id, "policy_id": episodes[0].policy_id,
+            "gamma": gamma, "seed": seed, "losses": losses,
             "updates": updates, "target_refresh": target_refresh}
+
+
+class ValuePredictor:
+    """Load a locally trained frozen V; use identical weights for every lookahead."""
+    def __init__(self, checkpoint, device="cpu"):
+        import torch
+        self.torch = torch
+        self.device = device
+        self.checkpoint = torch.load(checkpoint, map_location="cpu", weights_only=True)
+        c = self.checkpoint
+        self.model = torch.nn.Sequential(torch.nn.Linear(c["input_dim"],256), torch.nn.ReLU(),
+            torch.nn.Linear(256,256), torch.nn.ReLU(), torch.nn.Linear(256,1)).to(device)
+        self.model.load_state_dict(c["state_dict"])
+        self.model.eval()
+
+    def predict(self, episode, next_obs=False):
+        c = self.checkpoint
+        if episode.task_id != c["task_id"] or episode.policy_id != c["policy_id"]:
+            raise ValueError("V task/reference policy does not match the episode")
+        obs = episode.next_obs if next_obs else episode.obs
+        remaining = episode.remaining_steps - int(next_obs)
+        x = np.column_stack([obs, remaining/c["horizon"]])
+        x = (x - np.asarray(c["mean"])) / np.asarray(c["scale"])
+        with self.torch.no_grad():
+            tensor = self.torch.as_tensor(x,dtype=self.torch.float32,device=self.device)
+            return self.model(tensor).squeeze(-1).cpu().numpy()
