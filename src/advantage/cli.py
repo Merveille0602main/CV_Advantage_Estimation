@@ -3,6 +3,34 @@ import json
 from pathlib import Path
 
 
+def read_split(dataset,split):
+    """Verify IDs, family separation, paths and hashes before training/scoring."""
+    from .schema import Episode,file_hash
+    root=Path(dataset).resolve()
+    manifest=json.loads((root/"manifest.json").read_text())
+    membership={}
+    for name,ids in manifest["split"].items():
+        for eid in ids:
+            if eid in membership: raise ValueError("episode appears in multiple splits")
+            membership[eid]=name
+    records=manifest["episodes"]
+    if len({r["episode_id"] for r in records})!=len(records): raise ValueError("duplicate episode ID")
+    if set(membership)!={r["episode_id"] for r in records}: raise ValueError("split/record mismatch")
+    families={}; result=[]
+    for row in records:
+        eid=row["episode_id"];family=row["parent_id"];name=membership[eid]
+        if family in families and families[family]!=name: raise ValueError("family leakage between splits")
+        families[family]=name
+        if name!=split: continue
+        path=(root/row["path"]).resolve()
+        if not path.is_relative_to(root) or file_hash(path)!=row["sha256"]: raise ValueError("dataset path/hash mismatch")
+        ep=Episode.load(path)
+        if ep.episode_id!=eid or ep.parent_id!=family: raise ValueError("episode identity mismatch")
+        result.append(ep)
+    if not result: raise ValueError("selected split is empty")
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description="TD/N-step offline tools")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -27,6 +55,18 @@ def main():
     score.add_argument("dataset"); score.add_argument("--checkpoint", required=True)
     score.add_argument("--output", required=True); score.add_argument("--ns", type=int, nargs="+", default=[1,5,10,20])
     score.add_argument("--split", choices=["train","validation","test"], default="test")
+    qtrain = sub.add_parser("train-q")
+    qtrain.add_argument("dataset");qtrain.add_argument("--output",required=True)
+    qtrain.add_argument("--gamma",type=float,default=.99);qtrain.add_argument("--updates",type=int,default=1000)
+    qtrain.add_argument("--seed",type=int,default=0);qtrain.add_argument("--device",default="cpu")
+    qscore = sub.add_parser("score-qv")
+    qscore.add_argument("dataset");qscore.add_argument("--q-checkpoint",required=True)
+    qscore.add_argument("--v-checkpoint",required=True);qscore.add_argument("--output",required=True)
+    qscore.add_argument("--split",choices=["train","validation","test"],default="test")
+    qexp = sub.add_parser("synthetic-q")
+    qexp.add_argument("--output",required=True);qexp.add_argument("--seeds",type=int,nargs="+",default=[0,1,2])
+    qexp.add_argument("--episodes",type=int,default=450);qexp.add_argument("--updates",type=int,default=1000)
+    qexp.add_argument("--anchors",type=int,default=40);qexp.add_argument("--repeats",type=int,default=16)
     args = parser.parse_args()
     if args.command == "synthetic":
         from .synthetic import experiment
@@ -44,16 +84,7 @@ def main():
         import torch
         from .schema import Episode, file_hash
         from .value import fit_value
-        root = Path(args.dataset)
-        manifest = json.loads((root/"manifest.json").read_text())
-        selected = set(manifest["split"]["train"])
-        episodes = []
-        for row in manifest["episodes"]:
-            if row["episode_id"] in selected:
-                path = (root/row["path"]).resolve()
-                if not path.is_relative_to(root.resolve()) or file_hash(path) != row["sha256"]:
-                    raise ValueError("dataset path or hash mismatch")
-                episodes.append(Episode.load(path))
+        episodes = read_split(args.dataset,"train")
         if Path(args.output).exists():
             raise ValueError("checkpoint exists; choose a new output path")
         result = fit_value(episodes, n=args.n, gamma=args.gamma, updates=args.updates, seed=args.seed, device=args.device, method=args.method)
@@ -93,6 +124,36 @@ def main():
                             score=float(value),checkpoint_sha256=checkpoint_hash))
                         total += 1
         print(json.dumps({"scores":total,"checkpoint_sha256":checkpoint_hash}))
+
+    elif args.command == "train-q":
+        import torch
+        from .qvalue import fit_q
+        episodes = read_split(args.dataset,"train")
+        if Path(args.output).exists(): raise ValueError("checkpoint exists")
+        checkpoint=fit_q(episodes,gamma=args.gamma,updates=args.updates,seed=args.seed,device=args.device)
+        Path(args.output).parent.mkdir(parents=True,exist_ok=True)
+        torch.save(checkpoint,args.output)
+        print(json.dumps({"train_episodes":len(episodes),"last_loss":checkpoint["losses"][-1]}))
+    elif args.command == "score-qv":
+        import csv
+        from .qvalue import QPredictor,qv_scores
+        from .value import ValuePredictor
+        from .schema import file_hash
+        if Path(args.output).exists(): raise ValueError("output exists")
+        episodes=read_split(args.dataset,args.split)
+        qp,vp=QPredictor(args.q_checkpoint),ValuePredictor(args.v_checkpoint)
+        hashes={"q_sha256":file_hash(args.q_checkpoint),"v_sha256":file_hash(args.v_checkpoint)}
+        Path(args.output).parent.mkdir(parents=True,exist_ok=True)
+        with Path(args.output).open("w",newline="",encoding="utf-8") as f:
+            writer=csv.DictWriter(f,fieldnames=["episode_id","t","method","score",*hashes])
+            writer.writeheader()
+            for ep in episodes:
+                for t,score in enumerate(qv_scores(qp,vp,ep)):
+                    writer.writerow(dict(episode_id=ep.episode_id,t=t,method="mc_q_minus_shared_v",score=float(score),**hashes))
+        print(json.dumps({"episodes":len(episodes),**hashes}))
+    elif args.command == "synthetic-q":
+        from .qexperiment import experiment
+        print(json.dumps(experiment(args.output,args.seeds,args.episodes,args.updates,args.anchors,args.repeats)["summary"],indent=2))
 
 
 if __name__ == "__main__":

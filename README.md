@@ -89,3 +89,26 @@ advantage score data/canonical_v1 --checkpoint artifacts/shared_v_seed0.pt \
 
 参考：[RLinf RECAP 官方数据及流程](https://rlinf.readthedocs.io/en/latest/rst_source/examples/embodied/recap.html)。
 RLinf 自身的奖励定义与归一化可以不同；本工具读取原始 reward 并由配置确定折扣，不自动照搬归一化 advantage。
+
+
+## MC-Q 与独立评价
+
+Q 学习器的输入是当前状态、剩余时长和当前动作，监督为完整训练轨迹的折扣回报。
+它与共享 V 使用同一个参考策略、奖励和折扣定义，但额外以动作作为条件。
+`mc_q_minus_shared_v` 是一个前瞻式对照分数；它不读取实际未来轨迹，也不充当真实标签。
+
+```bash
+advantage train-q data/canonical_v1 --updates 1000 --device cuda --output artifacts/mc_q_seed0.pt
+advantage score-qv data/canonical_v1 --q-checkpoint artifacts/mc_q_seed0.pt \
+  --v-checkpoint artifacts/shared_v_seed0.pt --split test --output artifacts/qv_scores.csv
+advantage synthetic-q --output artifacts/shared_v_q_v1 --seeds 0 1 2
+```
+
+`synthetic-q` 在每个种子的同一训练集上拟合 MC-V 和 MC-Q，然后冻结模型。
+每个测试 episode 最多选一个 anchor；在相同状态上比较两种候选动作。
+TD/N-step 读取独立评分分支，每个候选默认平均 16 次评分；MC-Q 减 V 直接预测。
+所有方法都与人工环境精确动态规划的动作价值排序比较；oracle 只用于测试，不监督训练。
+同时报告 Advantage 数值误差、Q/V 各自的测试误差、排序准确率与标签可辨覆盖率。
+这些方法可读取的未来信息不同，结果是能力对照，不能直接解释为同信息权限下算法优劣。
+
+见 [评价协议](docs/EVALUATION.md)。真实数据中不能把另一个已学习 Q 当真值；需独立分支续跑或明确强度较弱的代理标签。
