@@ -49,6 +49,34 @@ def td_scores(ep, values, next_values, gamma=0.99):
     return n_step_scores(ep, values, next_values, 1, gamma)
 
 
+def lambda_targets(ep, next_values, gamma=0.99, lambda_=0.9):
+    """TD(lambda) forward return, without eligibility traces.
+
+    G_t = r_t + gamma * ((1-lambda) * V(s_{t+1}) + lambda * G_{t+1}), and a
+    terminal transition does not bootstrap. ``next_values[t]`` predicts
+    ``ep.next_obs[t]``, exactly like ``n_step_targets``.
+    """
+    v = _inputs(ep, next_values, gamma)
+    if not np.isfinite(lambda_) or not 0 <= lambda_ <= 1:
+        raise ValueError("lambda must be finite and between zero and one")
+    result = np.empty(len(ep), dtype=np.float64)
+    tail = 0.0
+    for t in range(len(ep) - 1, -1, -1):
+        if ep.terminated[t]:
+            tail = float(ep.reward[t])
+        else:
+            tail = float(ep.reward[t]) + gamma * ((1 - lambda_) * v[t] + lambda_ * tail)
+        result[t] = tail
+    return result
+
+
+def lambda_scores(ep, values, next_values, gamma=0.99, lambda_=0.9):
+    values = np.asarray(values, dtype=np.float64)
+    if values.shape != (len(ep),) or not np.isfinite(values).all():
+        raise ValueError("values must be a finite vector aligned with obs")
+    return lambda_targets(ep, next_values, gamma, lambda_) - values
+
+
 def discounted_returns(ep, gamma=0.99, bootstrap_value=None):
     """Full returns. Incomplete episodes require an explicit bootstrap estimate."""
     if ep.truncated[-1] and bootstrap_value is None:

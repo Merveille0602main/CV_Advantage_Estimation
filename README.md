@@ -141,3 +141,47 @@ advantage smoke-samples samples --output artifacts/real_samples_smoke_v1 --updat
 所有结果标记 `same_episode_smoke_only`，用于检查能否运行，不作为泛化、排序准确率或动作质量证据。
 检查输出为 `report.json`、`scores.csv`，以及每任务的 canonical 数据和模型；大型输出不上传 Git。
 首次成功末步奖励和失败时限终止依据样本 manifest 重建，尚未用仿真回放独立核验。
+
+
+## Advantage 构造对照（选项一）
+
+`advantage-study` 在人工有限时域 MDP 上比较五种 Advantage 构造：MC-Q 减共享 V、TD/N-step（1/5/10/20 步）、以及不含奖励项的纯价值差 `γⁿV(sₙ) − V(s)`（1/5 步）。
+同一 anchor 上比较全部候选动作，逐对判断排序方向；真值差距不超过 `--min-gap` 的动作对记为不可辨，只报告覆盖率。
+
+```bash
+advantage advantage-study --output artifacts/option1_estimators_v1 --seeds 0 1 2 --anchors 40 --repeats 16 --bootstrap 2000
+```
+
+输出 `summary.json`、`metrics.csv`、`anchor_metrics.csv`、`pair_metrics.csv`、`stability.csv`、`gap_bins.csv`、`comparison.csv`，以及逐候选分数和模型 checkpoint。
+`metrics.csv` 的 `ci_low/ci_high` 是按 anchor 聚类的 bootstrap 区间，`comparison.csv` 是同一批 anchor 上的配对 bootstrap 差值，`rank_flip_rate` 与 `mean_score_std` 衡量重复评分的排序稳定性，`gap_bins.csv` 按真值差距分档给出准确率。
+人工环境精确动态规划只用于评价，不参与 V/Q 训练或 checkpoint 选择；结果只在该 MDP 内成立，不能外推为 LIBERO 性能。
+
+
+## 时间尺度与价值学习（选项二）
+
+`timestudy` 把任务时限 H、折扣 γ 和价值目标分别作为实验轴。每个 (γ, H) 格子重算自己的精确动态规划真值；锚点用 state × 剩余时间比例网格，因此同一 `(state, fraction)` 在不同 H 下可比。原始 RMSE 不跨格比较，另给按真值标准差归一化的误差。
+
+```bash
+advantage timestudy --output artifacts/option2_time_v1 \
+  --gammas 0.9 0.95 --horizons 24 48 \
+  --targets mc nstep1 nstep5 lambda0.9 --scoring td1
+```
+
+目标可用 `mc`、`nstepN`、`lambdaX`、`teacher`；`teacher` 以精确 V 作回归目标，只用于分离自举误差，不是可部署估计器。`--scoring` 支持 `tdN` 与 `qv`（`qv` 会为每个格子重训 MC-Q）。
+输出 `cells.csv`（逐种子）、`progress.csv`（按剩余时间分档的准确率）、`anchors.csv`、`consistency.csv`（同一锚点在 γ、H、目标之间的判对一致性）与 `summary.json`。
+λ-return 见 [targets.py](src/advantage/targets.py)，V 的四种目标见 [value.py](src/advantage/value.py)，矩阵实验见 [timestudy.py](src/advantage/timestudy.py)。
+
+
+## Advantage 表示与学习目标（选项三）
+
+`representation-study` 在相同特征、容量和更新预算下训练三种表示：连续回归 advantage、二分类“是否优于参考策略”、同状态动作对排序。锚点按 `(state, remaining)` 单元留出，训练只使用未留出单元，把“同分布插值”和“未见区域”分开报告；`--fractions` 给数据量曲线。
+
+```bash
+advantage representation-study --output artifacts/option3_representation_v1 \
+  --seeds 0 1 2 --holdout 0.25 --fractions 1.0 0.5 0.25
+```
+
+输出 `cells.csv`（逐种子逐表示）、`comparisons.csv`（以连续回归为基线，对 top-1 和 regret 做配对 bootstrap 差值）、`anchor_scores.csv`、`summary.json`、`splits.json`。
+跨表示可比的指标是 top-1 与 regret；连续模型的 RMSE/校准斜率、分类器的 AUROC/AP/Brier/ECE 只作为各自表示内的诊断。二分类与排序标签由精确 oracle 生成；真实数据需要独立续跑才能得到等价标签。
+默认 `--regime state_dependent`：同一动作在不同进度下优劣会翻转，排序任务才有区分度；旧的恒定偏好环境用 `--regime constant`，但在那种环境里最优动作几乎不随状态变化，三种表示会同时接近满分。
+标签与单元划分见 [labels.py](src/advantage/labels.py)，三种训练目标见 [objectives.py](src/advantage/objectives.py)，分类/选择指标见 [metrics.py](src/advantage/metrics.py)。

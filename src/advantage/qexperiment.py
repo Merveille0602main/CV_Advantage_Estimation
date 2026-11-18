@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import numpy as np
 from .schema import Episode,split_families
-from .synthetic import generate,exact_values,outcomes,HORIZON,STATES,POLICY_ADVANCE
+from .synthetic import generate,exact_values,outcomes,HORIZON,POLICY_ADVANCE
 from .value import fit_value,ValuePredictor
 from .qvalue import fit_q,QPredictor,qv_scores
 from .targets import n_step_scores

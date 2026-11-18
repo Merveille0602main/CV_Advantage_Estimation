@@ -76,6 +76,52 @@ def main():
     smoke = sub.add_parser("smoke-samples")
     smoke.add_argument("samples");smoke.add_argument("--output",required=True)
     smoke.add_argument("--updates",type=int,default=200);smoke.add_argument("--device",default="cpu")
+    study = sub.add_parser("advantage-study")
+    study.add_argument("--output",required=True);study.add_argument("--seeds",type=int,nargs="+",default=[0,1,2])
+    study.add_argument("--episodes",type=int,default=450);study.add_argument("--updates",type=int,default=1000)
+    study.add_argument("--anchors",type=int,default=40);study.add_argument("--repeats",type=int,default=16)
+    study.add_argument("--min-gap",type=float,default=0.005)
+    study.add_argument("--bootstrap",type=int,default=2000);study.add_argument("--bootstrap-seed",type=int,default=0)
+    study.add_argument("--gamma",type=float,default=.99)
+    study.add_argument("--ns",type=int,nargs="+",default=[1,5,10,20])
+    study.add_argument("--value-ns",type=int,nargs="+",default=[1,5])
+    timing = sub.add_parser("timestudy")
+    timing.add_argument("--output",required=True)
+    timing.add_argument("--gammas",type=float,nargs="+",default=[0.9,0.95])
+    timing.add_argument("--horizons",type=int,nargs="+",default=[24,48])
+    timing.add_argument("--targets",nargs="+",default=["mc","nstep1","nstep5","lambda0.9"])
+    timing.add_argument("--scoring",nargs="+",default=["td1"])
+    timing.add_argument("--seeds",type=int,nargs="+",default=[0,1,2])
+    timing.add_argument("--episodes",type=int,default=450)
+    timing.add_argument("--updates",type=int,default=1000)
+    timing.add_argument("--states",type=int,default=5)
+    timing.add_argument("--fractions",type=float,nargs="+",default=[0.1,0.3,0.5,0.7,0.9])
+    timing.add_argument("--repeats",type=int,default=16)
+    timing.add_argument("--min-gap",type=float,default=0.005)
+    timing.add_argument("--bootstrap",type=int,default=2000)
+    timing.add_argument("--bootstrap-seed",type=int,default=0)
+    timing.add_argument("--lr",type=float,default=3e-4)
+    timing.add_argument("--target-refresh",type=int,default=20)
+    timing.add_argument("--hidden",type=int,nargs="+",default=[256,256])
+    timing.add_argument("--regime",default="constant")
+    represent = sub.add_parser("representation-study")
+    represent.add_argument("--output",required=True)
+    represent.add_argument("--seeds",type=int,nargs="+",default=[0,1,2])
+    represent.add_argument("--episodes",type=int,default=450)
+    represent.add_argument("--updates",type=int,default=1000)
+    represent.add_argument("--gamma",type=float,default=0.9)
+    represent.add_argument("--horizon",type=int,default=24)
+    represent.add_argument("--states",type=int,default=5)
+    represent.add_argument("--holdout",type=float,default=0.25)
+    represent.add_argument("--fractions",type=float,nargs="+",default=[1.0])
+    represent.add_argument("--min-gap",type=float,default=0.005)
+    represent.add_argument("--bootstrap",type=int,default=2000)
+    represent.add_argument("--bootstrap-seed",type=int,default=0)
+    represent.add_argument("--lr",type=float,default=3e-4)
+    represent.add_argument("--batch-size",type=int,default=128)
+    represent.add_argument("--hidden",type=int,nargs="+",default=[256,256])
+    represent.add_argument("--representations",nargs="+",default=["continuous","binary","pairwise"])
+    represent.add_argument("--regime",default="state_dependent")
     args = parser.parse_args()
     if args.command == "synthetic":
         from .synthetic import experiment
@@ -174,6 +220,33 @@ def main():
         from .sample_smoke import run
         report=run(args.samples,args.output,args.updates,args.device)
         print(json.dumps({k:report[k] for k in ("status","scope","raw_samples","transitions","score_rows","device")},indent=2))
+
+    elif args.command == "advantage-study":
+        from .study import experiment
+        report = experiment(args.output, args.seeds, args.episodes, args.updates, args.anchors,
+                            args.repeats, args.min_gap, args.bootstrap, args.bootstrap_seed,
+                            args.gamma, args.ns, args.value_ns)
+        print(json.dumps(report["summary"], indent=2))
+
+    elif args.command == "timestudy":
+        from .timestudy import experiment
+        report = experiment(args.output, args.gammas, args.horizons, args.targets,
+                            args.scoring, args.seeds, args.episodes, args.updates,
+                            args.states, args.fractions, args.repeats, args.min_gap,
+                            args.bootstrap, args.bootstrap_seed, args.lr,
+                            args.target_refresh, args.hidden, regime=args.regime)
+        print(json.dumps({"cells": len(report["cells"]),
+                          "marginals": report["marginals"]}, indent=2))
+
+    elif args.command == "representation-study":
+        from .representation import experiment
+        report = experiment(args.output, args.seeds, args.episodes, args.updates,
+                            args.gamma, args.horizon, args.states, args.holdout,
+                            args.fractions, args.min_gap, args.bootstrap,
+                            args.bootstrap_seed, args.lr, args.hidden,
+                            args.representations, batch_size=args.batch_size,
+                            regime=args.regime)
+        print(json.dumps(report["summary"], indent=2))
 
 
 if __name__ == "__main__":
