@@ -13,10 +13,10 @@ The common cross-representation metrics are top-1 selection and regret. A
 continuous regressor's RMSE and a classifier's AUROC are not comparable with
 each other, so they are reported as per-representation diagnostics only.
 """
-import csv
 import json
 from pathlib import Path
 import numpy as np
+from .experiment_io import write_csv
 from .schema import split_families
 from .synthetic import generate, exact_values, POLICY_ADVANCE
 from .labels import (build_transitions, binary_labels, all_cells, anchor_truth,
@@ -43,19 +43,6 @@ def _score_anchors(predictor, anchors, n_actions):
         action_matrix = np.full((len(anchors), 1), float(action))
         scores[:, action] = predictor.score(obs, remaining, action_matrix)
     return scores
-
-
-def _write_csv(path, rows, columns=None):
-    if not rows:
-        if not columns:
-            return
-        with Path(path).open("w", newline="", encoding="utf-8") as handle:
-            csv.DictWriter(handle, fieldnames=list(columns)).writeheader()
-        return
-    with Path(path).open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
 
 
 def experiment(output, seeds=(0, 1, 2), episodes=450, updates=1000, gamma=0.9,
@@ -283,9 +270,9 @@ def experiment(output, seeds=(0, 1, 2), episodes=450, updates=1000, gamma=0.9,
                   ])
     (output / "summary.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     (output / "splits.json").write_text(json.dumps(split_rows, indent=2), encoding="utf-8")
-    _write_csv(output / "cells.csv", rows)
-    _write_csv(output / "comparisons.csv", comparisons)
-    _write_csv(output / "anchor_scores.csv", anchor_rows)
+    write_csv(output / "cells.csv", rows)
+    write_csv(output / "comparisons.csv", comparisons)
+    write_csv(output / "anchor_scores.csv", anchor_rows)
     plot(output, summary)
     return report
 

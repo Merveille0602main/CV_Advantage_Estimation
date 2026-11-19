@@ -10,8 +10,9 @@ than to model size or data.
 """
 import numpy as np
 
+from .networks import DEFAULT_HIDDEN, scalar_mlp
+
 KINDS = ("continuous", "binary", "pairwise")
-DEFAULT_HIDDEN = (256, 256)
 
 
 def features(obs, remaining, action, horizon):
@@ -23,16 +24,6 @@ def features(obs, remaining, action, horizon):
     if len(obs) != len(remaining) or len(action) != len(remaining):
         raise ValueError("obs, remaining and action must share a length")
     return np.column_stack([obs, remaining/float(horizon), action])
-
-
-def _model(input_dim, hidden):
-    import torch
-    layers, width = [], int(input_dim)
-    for units in hidden:
-        layers += [torch.nn.Linear(width, int(units)), torch.nn.ReLU()]
-        width = int(units)
-    layers.append(torch.nn.Linear(width, 1))
-    return torch.nn.Sequential(*layers)
 
 
 def fit(kind, transition, pairs=None, horizon=24, updates=1000, batch_size=128,
@@ -51,7 +42,7 @@ def fit(kind, transition, pairs=None, horizon=24, updates=1000, batch_size=128,
     if device.startswith("cuda"):
         torch.cuda.manual_seed_all(seed)
     rng = np.random.default_rng(seed)
-    model = _model(x.shape[1], hidden).to(device)
+    model = scalar_mlp(x.shape[1], hidden).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     losses = []
 
@@ -122,7 +113,7 @@ class Predictor:
         c = self.checkpoint
         if c.get("kind") not in KINDS:
             raise ValueError("not a representation checkpoint")
-        self.model = _model(c["input_dim"], tuple(c.get("hidden", DEFAULT_HIDDEN))).to(device)
+        self.model = scalar_mlp(c["input_dim"], tuple(c.get("hidden", DEFAULT_HIDDEN))).to(device)
         self.model.load_state_dict(c["state_dict"])
         self.model.eval()
 

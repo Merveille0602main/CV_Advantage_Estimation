@@ -1,30 +1,16 @@
 """Frozen MC V, learned MC Q, and independent same-state oracle evaluation."""
-import csv
 import json
 from pathlib import Path
+
 import numpy as np
-from .schema import Episode,split_families
-from .synthetic import generate,exact_values,outcomes,HORIZON,POLICY_ADVANCE
-from .value import fit_value,ValuePredictor
-from .qvalue import fit_q,QPredictor,qv_scores
-from .targets import n_step_scores
+
 from .evaluation import ranking_metrics
-
-
-def branch(state,remaining,action,seed):
-    rng=np.random.default_rng(seed)
-    obs=[];nxt=[];actions=[];rewards=[]
-    for i in range(remaining):
-        a=action if i==0 else int(rng.random()<POLICY_ADVANCE)
-        options=outcomes(state,a)
-        _,new,r,done=options[rng.choice(3,p=[o[0] for o in options])]
-        obs.append([state]);nxt.append([new]);actions.append([a]);rewards.append(r)
-        state=new
-        if done:break
-    term=np.zeros(len(rewards),bool);term[-1]=True
-    return Episode(f"branch-{seed}-{action}",f"anchor-{seed}","progress-v1","fixed-random-policy-v1",
-        np.array(obs),np.array(nxt),np.array(actions),np.array(rewards),term,np.zeros(len(rewards),bool),
-        remaining-np.arange(len(rewards)),{"synthetic":True,"forced_first_action":True})
+from .experiment_io import write_csv
+from .schema import split_families
+from .synthetic import HORIZON, branch, exact_values, generate
+from .synthetic_comparison import (
+    choose_anchors, comparison_branch_seed, estimator_specs, fit_comparison_models, score_branches,
+)
 
 
 def experiment(output,seeds=(0,1,2),episodes=450,updates=1000,anchors=40,repeats=16):
@@ -38,46 +24,38 @@ def experiment(output,seeds=(0,1,2),episodes=450,updates=1000,anchors=40,repeats
     gamma=.99
     # Oracle arrays are used only after fitting; neither learner accepts oracle input.
     oracle_v,oracle_q=exact_values(gamma)
+    specs = estimator_specs(value_ns=())
     rows=[];candidate_rows=[];splits=[]
     for seed in seeds:
         data=generate(episodes,seed)
         split=split_families(data,seed)
         train=[e for e in data if e.episode_id in split["train"]]
         test=[e for e in data if e.episode_id in split["test"]]
-        vc=fit_value(train,gamma=gamma,updates=updates,seed=seed,method="mc")
-        qc=fit_q(train,gamma=gamma,updates=updates,seed=seed)
-        vp_path,qp_path=output/f"v_seed{seed}.pt",output/f"q_seed{seed}.pt"
-        torch.save(vc,vp_path);torch.save(qc,qp_path)
-        vp,qp=ValuePredictor(vp_path),QPredictor(qp_path)
+        vp, qp = fit_comparison_models(train, output, seed, updates, gamma)
         verrors=[];qerrors=[]
         for ep in test:
             t=HORIZON-ep.remaining_steps;s=ep.obs[:,0].astype(int);a=ep.action[:,0].astype(int)
             verrors.extend((vp.predict(ep)-oracle_v[t,s])**2)
             qerrors.extend((qp.predict(ep)-oracle_q[t,s,a])**2)
-        rng=np.random.default_rng(100000+seed)
-        chosen=rng.permutation(len(test))[:anchors]
-        methods={"mc_q_minus_v":[] ,**{f"td_n{n}":[] for n in (1,5,10,20)}}
+        chosen = choose_anchors(test, anchors, seed)
+        methods = {spec["name"]: [] for spec in specs}
         labels=[];reference_a=[]
-        for anchor,episode_index in enumerate(chosen):
-            ep=test[int(episode_index)]
-            frame=int(rng.integers(len(ep)))
+        for anchor, (ep, frame) in enumerate(chosen):
             s=int(ep.obs[frame,0]);remaining=int(ep.remaining_steps[frame]);t=HORIZON-remaining
             true_q=oracle_q[t,s,:].copy();labels.append(true_q)
             reference_a.append(true_q-oracle_v[t,s])
             predictions={key:[] for key in methods}
-            for action in (0,1):
-                values={n:[] for n in (1,5,10,20)}
-                learned=None
-                for repetition in range(repeats):
-                    # Same random seed across candidate actions; separate from training RNG.
-                    branch_seed=int(np.random.SeedSequence([seed,anchor,repetition,9876]).generate_state(1)[0])
-                    b=branch(s,remaining,action,branch_seed)
-                    v,nv=vp.predict(b),vp.predict(b,True)
-                    for n in values:
-                        values[n].append(float(n_step_scores(b,v,nv,n,gamma)[0]))
-                    if learned is None:learned=float(qv_scores(qp,vp,b)[0])
-                predictions["mc_q_minus_v"].append(learned)
-                for n in values:predictions[f"td_n{n}"].append(float(np.mean(values[n])))
+            for action in range(oracle_q.shape[2]):
+                branches = (
+                    branch(s, remaining, action, comparison_branch_seed(seed, anchor, repetition))
+                    for repetition in range(repeats)
+                )
+                repeated = score_branches(branches, specs, vp, qp, gamma, reuse_qv=True)
+                for spec in specs:
+                    name = spec["name"]
+                    samples = repeated[name]
+                    score = samples[0] if spec["family"] == "q_minus_v" else float(np.mean(samples))
+                    predictions[name].append(score)
             for method,scores in predictions.items():
                 methods[method].append(scores)
                 for a,score in enumerate(scores):
@@ -108,6 +86,5 @@ def experiment(output,seeds=(0,1,2),episodes=450,updates=1000,anchors=40,repeats
     (output/"results.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
     (output/"splits.json").write_text(json.dumps(splits,indent=2),encoding="utf-8")
     for name,records in (("metrics.csv",rows),("candidate_scores.csv",candidate_rows)):
-        with (output/name).open("w",newline="",encoding="utf-8") as f:
-            writer=csv.DictWriter(f,fieldnames=list(records[0]));writer.writeheader();writer.writerows(records)
+        write_csv(output / name, records)
     return report

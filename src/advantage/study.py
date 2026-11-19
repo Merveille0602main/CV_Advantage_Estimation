@@ -13,78 +13,17 @@ the reward term stays visible instead of being mixed in silently.
 Reference labels come from the toy MDP's exact dynamic programming solution.
 They never supervise V, Q, the checkpoint choice, or the scoring rule.
 """
-import csv
 import json
 from pathlib import Path
 import numpy as np
 from .schema import split_families
 from .synthetic import generate, exact_values, branch
-from .value import fit_value, ValuePredictor
-from .qvalue import fit_q, QPredictor, qv_scores
-from .targets import n_step_scores
+from .experiment_io import write_csv
+from .synthetic_comparison import (
+    choose_anchors, comparison_branch_seed, estimator_specs, fit_comparison_models,
+    score_branches, score_once, value_difference_score,
+)
 from . import discrimination
-
-
-def estimator_specs(ns=(1, 5, 10, 20), value_ns=(1, 5)):
-    """Every estimator with its information requirements, for honest reporting."""
-    specs = [dict(name="mc_q_minus_v", family="q_minus_v", lookahead=1,
-                  sees_future_observations=False, stochastic_scoring=False,
-                  formula="Q(s,a) - V(s)")]
-    for n in ns:
-        specs.append(dict(name=f"td_n{n}", family="td", lookahead=n,
-                          sees_future_observations=True, stochastic_scoring=True,
-                          formula=("r + gamma*V(s') - V(s)" if n == 1
-                                   else f"sum_k gamma^k r_k + gamma^{n} V(s_{n}) - V(s)")))
-    for n in value_ns:
-        specs.append(dict(name=f"value_delta_n{n}", family="value_difference", lookahead=n,
-                          sees_future_observations=True, stochastic_scoring=True,
-                          formula=f"gamma^{n} * V(s_{n}) - V(s), no reward term"))
-    return specs
-
-
-def value_difference_score(episode, values, next_values, n, gamma):
-    """gamma^n * V(s_n) - V(s_0) with no reward term.
-
-    Termination inside the window makes the tail value zero; otherwise the
-    value predicted for s_n (aligned with next_obs) is discounted back.
-    """
-    stop = min(n, len(episode))
-    tail = 0.0 if episode.terminated[stop - 1] else float(next_values[stop - 1])
-    return gamma ** stop * tail - float(values[0])
-
-
-def score_once(spec, episode, values, next_values, qv_score, gamma):
-    """One estimator's score for the forced first action of a branch."""
-    if spec["family"] == "q_minus_v":
-        return qv_score
-    if spec["family"] == "td":
-        return float(n_step_scores(episode, values, next_values, spec["lookahead"], gamma)[0])
-    return value_difference_score(episode, values, next_values, spec["lookahead"], gamma)
-
-
-def _branch_seed(seed, anchor, repetition, salt=9876):
-    return int(np.random.SeedSequence([seed, anchor, repetition, salt]).generate_state(1)[0])
-
-
-def _choose_anchors(test, anchors, seed):
-    """One anchor state per held-out episode, frame drawn once and reused."""
-    rng = np.random.default_rng(100000 + seed)
-    chosen = rng.permutation(len(test))[:anchors]
-    result = []
-    for episode_index in chosen:
-        episode = test[int(episode_index)]
-        frame = int(rng.integers(len(episode)))
-        result.append((episode, frame))
-    return result
-
-
-def _write_csv(path, rows):
-    if not rows:
-        return
-    with Path(path).open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
 
 
 def experiment(output, seeds=(0, 1, 2), episodes=450, updates=1000, anchors=40, repeats=16,
@@ -117,13 +56,9 @@ def experiment(output, seeds=(0, 1, 2), episodes=450, updates=1000, anchors=40, 
         split = split_families(data, seed)
         train = [e for e in data if e.episode_id in split["train"]]
         test = [e for e in data if e.episode_id in split["test"]]
-        vc = fit_value(train, gamma=gamma, updates=updates, seed=seed, method="mc")
-        qc = fit_q(train, gamma=gamma, updates=updates, seed=seed)
-        vp_path, qp_path = output / f"v_seed{seed}.pt", output / f"q_seed{seed}.pt"
-        torch.save(vc, vp_path); torch.save(qc, qp_path)
-        vp, qp = ValuePredictor(vp_path), QPredictor(qp_path)
+        vp, qp = fit_comparison_models(train, output, seed, updates, gamma)
 
-        chosen = _choose_anchors(test, anchors, seed)
+        chosen = choose_anchors(test, anchors, seed)
         n_actions = oracle_q.shape[2]  # action axis of the exact solution
         repeats_by_method = {name: np.zeros((len(chosen), n_actions, repeats)) for name in methods}
         truth = np.zeros((len(chosen), n_actions))
@@ -140,14 +75,12 @@ def experiment(output, seeds=(0, 1, 2), episodes=450, updates=1000, anchors=40, 
             anchor_ids.append(f"{episode.episode_id}:{frame}")
             episode_ids.append(episode.episode_id); frames.append(frame)
             for action in range(n_actions):
-                for repetition in range(repeats):
-                    sample = branch(state, remaining, action,
-                                    _branch_seed(seed, anchor, repetition))
-                    values, next_values = vp.predict(sample), vp.predict(sample, True)
-                    qv_score = float(qv_scores(qp, vp, sample)[0])
-                    for spec in specs:
-                        repeats_by_method[spec["name"]][anchor, action, repetition] = score_once(
-                            spec, sample, values, next_values, qv_score, gamma)
+                branches = (
+                    branch(state, remaining, action, comparison_branch_seed(seed, anchor, repetition))
+                    for repetition in range(repeats)
+                )
+                for name, samples in score_branches(branches, specs, vp, qp, gamma).items():
+                    repeats_by_method[name][anchor, action] = samples
 
         scores = {name: repeats_by_method[name].mean(axis=2) for name in methods}
         advantage_truth = truth - true_v[:, None]
@@ -256,7 +189,7 @@ def experiment(output, seeds=(0, 1, 2), episodes=450, updates=1000, anchors=40, 
                        ("stability.csv", stability_rows),
                        ("gap_bins.csv", gap_rows),
                        ("comparison.csv", comparison_rows)):
-        _write_csv(output / name, rows)
+        write_csv(output / name, rows)
     plot(output, summary)
     return report
 

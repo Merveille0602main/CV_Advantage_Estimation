@@ -10,23 +10,10 @@ separated from the effect of the advantage construction:
            removes bootstrapping error and leaves only approximation error
 """
 import numpy as np
+from .networks import DEFAULT_HIDDEN, scalar_mlp
 from .targets import n_step_targets, discounted_returns, lambda_targets
 
 METHODS = ("mc", "nstep", "lambda", "teacher")
-DEFAULT_HIDDEN = (256, 256)
-
-
-def _architecture(input_dim, hidden):
-    import torch
-    layers, width = [], int(input_dim)
-    for units in hidden:
-        units = int(units)
-        if units < 1:
-            raise ValueError("hidden units must be positive")
-        layers += [torch.nn.Linear(width, units), torch.nn.ReLU()]
-        width = units
-    layers.append(torch.nn.Linear(width, 1))
-    return torch.nn.Sequential(*layers)
 
 
 def _teacher_targets(episodes, target_source):
@@ -70,7 +57,7 @@ def fit_value(episodes, n=1, gamma=0.99, updates=1000, batch_size=128,
     def tensor(a):
         return torch.as_tensor((a-mean)/scale, dtype=torch.float32, device=device)
     tx = tensor(x)
-    model = _architecture(x.shape[1], hidden).to(device)
+    model = scalar_mlp(x.shape[1], hidden).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     # Fixed targets are built once; bootstrapped targets are refreshed with
     # the current V. The oracle is never read here unless the caller passes a
@@ -124,7 +111,7 @@ class ValuePredictor:
         if c.get("input_dim") is None or c.get("state_dict") is None:
             raise ValueError("not a V checkpoint")
         hidden = tuple(c.get("hidden", DEFAULT_HIDDEN))
-        self.model = _architecture(c["input_dim"], hidden).to(device)
+        self.model = scalar_mlp(c["input_dim"], hidden).to(device)
         self.model.load_state_dict(c["state_dict"])
         self.model.eval()
 

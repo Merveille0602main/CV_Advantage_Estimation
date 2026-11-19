@@ -15,7 +15,6 @@ Anchors are synthetic (state, fraction-of-horizon) probes, not sampled
 frames. That makes the same state/remaining-time pairs available for every
 horizon, which episode sampling cannot guarantee.
 """
-import csv
 import json
 from pathlib import Path
 import numpy as np
@@ -23,8 +22,9 @@ from .schema import split_families
 from .synthetic import (generate, exact_values, branch, anchor_grid,
                         STATES, POLICY_ADVANCE)
 from .value import fit_value, ValuePredictor
-from .qvalue import fit_q, QPredictor, qv_scores
-from .targets import n_step_scores
+from .qvalue import fit_q, QPredictor
+from .experiment_io import write_csv
+from .synthetic_comparison import score_branches
 from . import discrimination
 
 TARGETS = ("mc", "nstep1", "nstep5", "lambda0.9")
@@ -80,19 +80,6 @@ def _branch_seed(gamma, horizon, seed, anchor, repetition):
     return int(np.random.SeedSequence(parts).generate_state(1)[0])
 
 
-def _write_csv(path, rows, columns=None):
-    if not rows:
-        if not columns:
-            return
-        with Path(path).open("w", newline="", encoding="utf-8") as handle:
-            csv.DictWriter(handle, fieldnames=list(columns)).writeheader()
-        return
-    with Path(path).open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-        writer.writeheader()
-        writer.writerows(rows)
-
-
 def teacher_source(oracle_values, horizon):
     """Per-step exact V, used only by the explicit teacher diagnostic."""
     def source(episode):
@@ -123,6 +110,8 @@ def experiment(output, gammas=(0.9, 0.95), horizons=(24, 48), targets=TARGETS,
     output.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(1)
     rules = [parse_scoring(spec) for spec in scoring]
+    branch_specs = [dict(rule, family="td" if rule["kind"] == "n_step" else "q_minus_v")
+                    for rule in rules]
     target_specs = {spec: parse_target(spec) for spec in targets}
 
     cells, anchor_rows, progress_rows, split_rows = [], [], [], []
@@ -172,26 +161,15 @@ def experiment(output, gammas=(0.9, 0.95), horizons=(24, 48), targets=TARGETS,
                     for ai, anchor in enumerate(anchors):
                         state, remaining = anchor["state"], anchor["remaining"]
                         for action in range(n_actions):
-                            learned = None
-                            for repetition in range(repeats):
-                                sample = branch(state, remaining, action,
-                                                _branch_seed(gamma, horizon, seed, ai, repetition),
-                                                states, policy_advance, regime)
-                                values = vp.predict(sample)
-                                next_values = vp.predict(sample, True)
-                                if learned is None and qp is not None:
-                                    # Q-V depends only on the first state and
-                                    # action, so one evaluation per candidate
-                                    # is enough; repeated branches would be
-                                    # identical draws of the same number.
-                                    learned = float(qv_scores(qp, vp, sample)[0])
-                                for rule in rules:
-                                    if rule["kind"] == "q_minus_v":
-                                        score = learned
-                                    else:
-                                        score = float(n_step_scores(sample, values, next_values,
-                                                                    rule["lookahead"], gamma)[0])
-                                    repeats_by_rule[rule["name"]][ai, action, repetition] = score
+                            branches = (
+                                branch(state, remaining, action,
+                                       _branch_seed(gamma, horizon, seed, ai, repetition),
+                                       states, policy_advance, regime)
+                                for repetition in range(repeats)
+                            )
+                            scores = score_branches(branches, branch_specs, vp, qp, gamma, reuse_qv=True)
+                            for name, samples in scores.items():
+                                repeats_by_rule[name][ai, action] = samples
 
                     for rule in rules:
                         name = rule["name"]
@@ -313,8 +291,8 @@ def experiment(output, gammas=(0.9, 0.95), horizons=(24, 48), targets=TARGETS,
     (output / "splits.json").write_text(json.dumps(split_rows, indent=2), encoding="utf-8")
     for name, rows in (("cells.csv", cells), ("anchors.csv", anchor_rows),
                        ("progress.csv", progress_rows)):
-        _write_csv(output / name, rows)
-    _write_csv(output / "consistency.csv", consistency_rows,
+        write_csv(output / name, rows)
+    write_csv(output / "consistency.csv", consistency_rows,
                columns=("axis", "fixed", "setting_a", "setting_b", "shared_anchors", "agreement"))
     plot(output, summary)
     return report

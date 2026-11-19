@@ -23,6 +23,12 @@ class RankingTests(unittest.TestCase):
         result=ranking_metrics([[1,2],[1,2]],[[1,1.001],[1,2]],.005)
         self.assertEqual(result["pair_coverage"],.5)
         self.assertEqual(result["evaluable_anchors"],1)
+    def test_ranking_weights_states_equally_with_uneven_eligible_pairs(self):
+        # The first state gets both eligible pairs right; the second misses all three.
+        result = ranking_metrics([[0, 0, 1], [2, 1, 0]], [[0, 0, 1], [0, 1, 2]])
+        self.assertEqual(result["valid_pairs"], 5)
+        self.assertAlmostEqual(result["ranking_accuracy"], 0.5)
+
     def test_no_distinguishable_labels(self):
         self.assertIsNone(ranking_metrics([[0,1]],[[1,1]])["ranking_accuracy"])
 

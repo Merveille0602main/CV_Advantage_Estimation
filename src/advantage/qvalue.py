@@ -1,5 +1,6 @@
 """Monte Carlo Q: regress complete reference-policy returns on state/time/action."""
 import numpy as np
+from .networks import scalar_mlp
 from .targets import discounted_returns
 
 
@@ -22,8 +23,7 @@ def fit_q(episodes, gamma=0.99, updates=1000, batch_size=128, seed=0, lr=3e-4, d
     rng = np.random.default_rng(seed)
     tx = torch.as_tensor((x-mean)/scale,dtype=torch.float32,device=device)
     ty = torch.as_tensor(returns,dtype=torch.float32,device=device)
-    model = torch.nn.Sequential(torch.nn.Linear(x.shape[1],256),torch.nn.ReLU(),
-        torch.nn.Linear(256,256),torch.nn.ReLU(),torch.nn.Linear(256,1)).to(device)
+    model = scalar_mlp(x.shape[1]).to(device)
     optim = torch.optim.Adam(model.parameters(),lr=lr)
     losses=[]
     for step in range(updates):
@@ -46,8 +46,7 @@ class QPredictor:
         c=self.checkpoint
         if c.get("kind") != "mc_q":
             raise ValueError("not an MC-Q checkpoint")
-        self.model=torch.nn.Sequential(torch.nn.Linear(c["input_dim"],256),torch.nn.ReLU(),
-            torch.nn.Linear(256,256),torch.nn.ReLU(),torch.nn.Linear(256,1)).to(device)
+        self.model = scalar_mlp(c["input_dim"]).to(device)
         self.model.load_state_dict(c["state_dict"]);self.model.eval()
 
     def predict(self,episode,actions=None):
