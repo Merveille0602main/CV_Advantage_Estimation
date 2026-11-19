@@ -1,0 +1,26 @@
+{
+  "episode": "init40_rep0",
+  "frame": 40,
+  "group": "ref",
+  "rows": {
+    "perturbed": {
+      "ret": 0.6426116020847181,
+      "steps": 45,
+      "success": true,
+      "terminal": true
+    },
+    "recorded": {
+      "ret": 0.6622820409839835,
+      "steps": 42,
+      "success": true,
+      "terminal": true
+    },
+    "resampled": {
+      "ret": 0.6622820409839835,
+      "steps": 42,
+      "success": true,
+      "terminal": true
+    }
+  },
+  "seed": 100805
+}

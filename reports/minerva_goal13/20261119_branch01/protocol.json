@@ -1,0 +1,20 @@
+{
+  "source_run": "20261119_run01",
+  "source_commit": "7671b454a281506a68706e7b57660742b7da85da",
+  "task": "libero_goal_6",
+  "gamma": 0.99,
+  "anchors": "one rep0 per each of the 10 sorted test families; alternate frames 40 and 80",
+  "candidates": ["recorded", "resampled", "perturbed"],
+  "perturbation": "reverse translation with [-1,1] clipping and flip gripper to the opposite extreme; rotation unchanged",
+  "restore": "replay recorded physical action prefix and restore pre-action policy queues, temporal ensemble and RNG; verify complete original suffix",
+  "estimand": "at fixed simulator and policy history advance the policy normally, replace only the first external command, then follow MINERVA to success or original time limit",
+  "reference_repeats": 8,
+  "score_repeats": 2,
+  "seeds": "candidate 70000+i; paired references 100000+100*i+[0..7]; paired scores 200000+100*i+[8,9]",
+  "methods": ["Q-V", "TD1", "N5", "N10", "N20"],
+  "margin": 0.005,
+  "reference_rule": "paired percentile bootstrap 95% interval for the mean difference must lie entirely beyond +/-0.005 and at least six of eight paired differences must have the winning sign",
+  "ranking": "per seed average correct over evaluable pairs at each anchor, then equal weight across evaluable anchors; report all three seeds and their mean; ties count as one half",
+  "q_error": "all 30 anchor-action cells weighted equally, compare each frozen Q with the reference mean, report RMSE MAE and signed bias as well as V-only baseline and reference standard errors",
+  "uncertainty": "10000 bootstrap draws; paired references within each anchor, cluster outer resampling by test family; descriptive intervals with only 10 families"
+}

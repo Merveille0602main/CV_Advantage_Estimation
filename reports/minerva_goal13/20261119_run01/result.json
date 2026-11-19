@@ -1,0 +1,79 @@
+{
+  "checkpoints": {
+    "Q_seed0": {
+      "sha256": "c88c84089f59649cc61086a336a0af6c4e5908c99a299abaeed6874093ed518e",
+      "validation_rmse": 0.14540863773973042
+    },
+    "Q_seed1": {
+      "sha256": "7b00e5c44b437d344b42e90a5e1ce4dbfd1648a2a1351ba22defdcf528160f8f",
+      "validation_rmse": 0.14764272911909074
+    },
+    "Q_seed2": {
+      "sha256": "1ba03bd43334fae6b23632348decee77ddfd781eb8368cf59a01b88d521db22b",
+      "validation_rmse": 0.14268409955584008
+    },
+    "V_seed0": {
+      "sha256": "ee614cc9bd925a2b13b1c894b38264c2ae532d8e044d6d99ca99fb431eef47ce",
+      "validation_rmse": 0.1527443091401781
+    },
+    "V_seed1": {
+      "sha256": "a0a9c56f911a93e4e5f63402e4ee55e844f42c13832f585ed0ae163546a37c44",
+      "validation_rmse": 0.13730539015238896
+    },
+    "V_seed2": {
+      "sha256": "d1dabc61dfc0c9837536080d319b5b69c722db91eb1367b8f3922ac08f2b2a7d",
+      "validation_rmse": 0.14385164154299812
+    }
+  },
+  "collection_errors_logged": 0,
+  "device": "cuda",
+  "snapshots": 70,
+  "source_commit": "7671b454a281506a68706e7b57660742b7da85da",
+  "split": {
+    "test": {
+      "episodes": 20,
+      "families": 10,
+      "success": 18,
+      "timeout": 2,
+      "transitions": 2227
+    },
+    "train": {
+      "episodes": 70,
+      "families": 35,
+      "success": 62,
+      "timeout": 8,
+      "transitions": 8262
+    },
+    "validation": {
+      "episodes": 10,
+      "families": 5,
+      "success": 9,
+      "timeout": 1,
+      "transitions": 1128
+    }
+  },
+  "train_return_mean": 0.45641020196755744,
+  "validation": {
+    "Q": {
+      "by_seed": [
+        0.14540863773973042,
+        0.14764272911909074,
+        0.14268409955584008
+      ],
+      "mean": 0.14524515547155373,
+      "sample_sd": 0.0024833539065932594
+    },
+    "V": {
+      "by_seed": [
+        0.1527443091401781,
+        0.13730539015238896,
+        0.14385164154299812
+      ],
+      "mean": 0.14463378027852172,
+      "sample_sd": 0.007749119990623692
+    }
+  },
+  "validation_constant_rmse": 0.3267523759331585,
+  "validation_time_only_rmse": 0.19788314441641955,
+  "validation_unit": "per transition"
+}

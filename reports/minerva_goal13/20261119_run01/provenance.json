@@ -1,0 +1,32 @@
+{
+  "batch_size": 128,
+  "collector_sha256": "75cad07d25129b88e8c2ea2f2088e5988c3f1c717f120e4c5ae2fb8a3ef5bfaa",
+  "device": "cuda",
+  "gamma": 0.99,
+  "hidden": [
+    256,
+    256
+  ],
+  "lr": 0.0003,
+  "manifest_sha256": "938c13ef919843b0f19b8838973e7645c1b78dffbdf9cde4567560ea86e86057",
+  "minerva_code_sha256": "25464f3ab4a9f368305790c9f1a7dc6e6dc79baf6fed2e78e41c9b38d136e6ac",
+  "numpy": "1.26.4",
+  "policy_inference": "CPU, OSMesa, n_action_steps=1, ensemble=0.01, noise_temperature=0.85",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "source_commit": "7671b454a281506a68706e7b57660742b7da85da",
+  "torch": "2.7.1+cu128",
+  "updates": 1000,
+  "weight_files": {
+    "config.json": "361e92416af2be66bf3bc21c2b8abd0e24b1d0b89eb736d489f943c3cc06937c",
+    "model.safetensors": "4183d17f22f2ed1bc93c77d0d5a849da9d302d23e09302e632b470cb6e5a24ee",
+    "policy_postprocessor.json": "697e6bf50a3f99b0677a9e797babb5ce2e0d17acf8fcd15596ba3ac0bc7a5a72",
+    "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "a002c0df7f79c5b169c5a899ad151d4ea1bed246c7d82bd93ed1556558d517a9",
+    "policy_preprocessor.json": "7b095590a92959edb15083469bb0d27f13094c8fe0cd816633173fd96f612ba1",
+    "policy_preprocessor_step_4_normalizer_processor.safetensors": "f98234b21ce8ffacf1b86657f3cf8e24ac6c31ebcd6a3b83cecd484439674306",
+    "train_config.json": "38184cc71904ee322b7279da8da4f56d76df1ef5bac70b828099b42f4cb86e71"
+  }
+}
