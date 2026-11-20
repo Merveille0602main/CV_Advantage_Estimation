@@ -1,0 +1,66 @@
+{
+  "protocol_commit": "7101753e335344ff71b7d0804a478f2bb5f0116b",
+  "training_source": "7671b454a281506a68706e7b57660742b7da85da",
+  "publication_parent": "7ac5d91104338ec4d73d33b3160c1759c2f94f45",
+  "demo_revision": "a1aaacb7f6cd6ee5fb43120f673cebb0cfea7dd4",
+  "policy_revision": "38e741428bd0de44f0e5aab9343c8ea1559e8998",
+  "policy_eval_source": "64c3cc8be364eb62df4f9fdc4bdccb1be9d1118e",
+  "policy_archive_sha256": "25464f3ab4a9f368305790c9f1a7dc6e6dc79baf6fed2e78e41c9b38d136e6ac",
+  "weight_files_sha256": {
+    "config.json": "361e92416af2be66bf3bc21c2b8abd0e24b1d0b89eb736d489f943c3cc06937c",
+    "model.safetensors": "4183d17f22f2ed1bc93c77d0d5a849da9d302d23e09302e632b470cb6e5a24ee",
+    "policy_postprocessor.json": "697e6bf50a3f99b0677a9e797babb5ce2e0d17acf8fcd15596ba3ac0bc7a5a72",
+    "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "a002c0df7f79c5b169c5a899ad151d4ea1bed246c7d82bd93ed1556558d517a9",
+    "policy_preprocessor.json": "7b095590a92959edb15083469bb0d27f13094c8fe0cd816633173fd96f612ba1",
+    "policy_preprocessor_step_4_normalizer_processor.safetensors": "f98234b21ce8ffacf1b86657f3cf8e24ac6c31ebcd6a3b83cecd484439674306",
+    "train_config.json": "38184cc71904ee322b7279da8da4f56d76df1ef5bac70b828099b42f4cb86e71"
+  },
+  "simulation": {
+    "python": "3.12.3",
+    "mujoco": "3.3.2",
+    "torch": "2.7.1+cu128",
+    "torchvision": "0.22.1+cu128",
+    "numpy": "2.2.6",
+    "robosuite": "1.4.0",
+    "lerobot": "0.6.1",
+    "inference": "CPU",
+    "renderer": "OSMesa"
+  },
+  "training": {
+    "python": "3.12.3",
+    "torch": "2.7.1+cu128",
+    "numpy": "1.26.4",
+    "accelerator": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "updates": 1000,
+    "batch": 128,
+    "lr": 0.0003,
+    "hidden": [
+      256,
+      256
+    ]
+  },
+  "scripts_sha256": {
+    "analysis.py": "a49cce6caed0e1b9060d4ce5b56df04b7ae5fe37274cd9bde7a91981ae9e9763",
+    "branches.py": "97655dc560bea6783c3582568e76b085b788c33cd3fbf28a48099d181721fa03",
+    "prepare.py": "c4e7b0f897f08d29c847d4a6e696a0e3ea919c5e6b274ae666416c98a132dbf7",
+    "restore.py": "363b5cd30d24186fb86c0dc7c54b2c732537ffa4b5e7014c5389112a2bf0d795",
+    "run.sh": "46ad606f5609d76f388b42c40ea18b093cc35a723f58b599675081f1a039f164",
+    "simulator.py": "0d6654f72fe59d4246bf2acfec36f6db78f7eb8fb7e55e5b9d3310ca3b8724aa",
+    "study.py": "0a5b49164daa55cd1c873c25e67279a2545c7e7a3b2c9566936a191332b88bec",
+    "verify.py": "a9269e9f4dfb7f62643ca31eb0c57de4bf3ad5e224de962acfddae09defb3184"
+  },
+  "published_scripts_sha256": {
+    "analysis.py": "a49cce6caed0e1b9060d4ce5b56df04b7ae5fe37274cd9bde7a91981ae9e9763",
+    "branches.py": "1edb5aae775b5b1e257c7af481dcb9df031bf096ed30f2dadae4285d24eb6326",
+    "figures.py": "e1769ed13e6700ae09fa798cf2bc659d1877ab5de50d1f276ac1f536b636a5f2",
+    "package_run.py": "3205721a6f89712c3439b73b603b8a74186b1c78a878361f56ae3e6b4512a2f3",
+    "prepare.py": "c4e7b0f897f08d29c847d4a6e696a0e3ea919c5e6b274ae666416c98a132dbf7",
+    "restore.py": "363b5cd30d24186fb86c0dc7c54b2c732537ffa4b5e7014c5389112a2bf0d795",
+    "run.sh": "46ad606f5609d76f388b42c40ea18b093cc35a723f58b599675081f1a039f164",
+    "simulator.py": "0d6654f72fe59d4246bf2acfec36f6db78f7eb8fb7e55e5b9d3310ca3b8724aa",
+    "study.py": "0a5b49164daa55cd1c873c25e67279a2545c7e7a3b2c9566936a191332b88bec",
+    "train_diagnostic.py": "ec9fedf1de8ac179045cc8618ebe3e4c294400ca7be2ea977e01497d3133cc08",
+    "verify.py": "3d3793875ee59342a57c507b512bacfb635da6f014bd3ea485a70423e9c809e4"
+  },
+  "provenance_note": "The protocol commit predates scoring. Subsequent helpers add independent verification, a training-family diagnostic, release packaging and figures. The resume guard can regenerate omitted training snapshots."
+}

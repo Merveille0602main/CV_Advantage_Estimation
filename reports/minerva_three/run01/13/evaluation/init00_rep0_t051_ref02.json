@@ -1,0 +1,1 @@
+{"task":13,"init":0,"frame":51,"seed":21300512,"group":"ref","repeat":2,"rows":{"recorded":{"steps":249,"success":false,"terminal":true},"resampled":{"steps":249,"success":false,"terminal":true},"demo":{"steps":249,"success":false,"terminal":true},"mild":{"steps":249,"success":false,"terminal":true},"strong":{"steps":64,"success":true,"terminal":true}}}

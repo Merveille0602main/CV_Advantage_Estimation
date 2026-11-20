@@ -1,0 +1,22 @@
+{
+  "recomputed_from": "published checkpoints and individual reference/scoring branches in an independent CPU directory",
+  "byte_identical_outputs": {
+    "summary.json": "a9c2d9f8d4893b087351cef89380275229838a7e6e11514ec0e6f0432bf27be9",
+    "13/metrics.json": "102748744770d0c4ba3bad7a478454292765bb7b74b8a16144de06058399f13e",
+    "13/predictions.csv": "3bef9b48174be426872eaa365b029622472a3f19db7e177744e6649ea406f84e",
+    "13/pairs.csv": "5268843b22af3ec94b38551fb5f76186cf6af25fa3f511ba0bbeb6535d21f8da",
+    "19/metrics.json": "873fac1d52cccc7721a6d38ea7fa0a34f57ad299cba246a5f76b8f53e2a3cd31",
+    "19/predictions.csv": "e87e36b1b5a210c7253816b602ac728a53dc5a1513cf37b6e3b285d87ae13fe5",
+    "19/pairs.csv": "8d7b418784049a05642767e833d97353e4b64c57efd7671428661025da350b59",
+    "25/metrics.json": "255c950bfe6fa90fd4ef82701c5af8d9a78ed9d579d62ad4965ac510491f9995",
+    "25/predictions.csv": "bc4c4aa889a363b2034c653af0b32e0cde3fcf5018625f1b0562ba3d07b7d1bc",
+    "25/pairs.csv": "c910b4143d8ab5cb3ce9b4b834a76fcb1089ddc965f6b7ad50fde225ca42c8a6"
+  },
+  "independently_checked": [
+    "all candidate donor records",
+    "paired terminal returns and reference eligibility",
+    "per-seed action-gap RMSE and ranking accuracy",
+    "each 6000-step training budget",
+    "all published study data digests"
+  ]
+}

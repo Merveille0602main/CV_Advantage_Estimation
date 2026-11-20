@@ -1,6 +1,7 @@
 """Independent CPU audit using exported predictions and raw termination records."""
 import argparse
 import csv
+import hashlib
 import itertools
 import json
 from collections import defaultdict
@@ -20,8 +21,11 @@ def nested_mean(values):
     return float(np.mean([np.mean(v) for v in per_family.values()]))
 
 
-def check(root):
-    summary=read(root/"summary.json")
+def check(root,task=None):
+    if task is None and (root/"checksums.json").exists():
+        for rel,digest in read(root/"checksums.json").items():
+            assert hashlib.sha256((root/rel).read_bytes()).hexdigest()==digest,rel
+    summary=read(root/"summary.json") if task is None else {"tasks":[read(root/str(task)/"metrics.json")],"macro_gap_rmse":{}}
     proof=[]
     names=("recorded","resampled","demo","mild","strong")
     methods=("base_QV","plain_QV","branch_QV","N1","N5","N10","N20")
@@ -33,6 +37,8 @@ def check(root):
         test_donors=set(demo["test_ids"])
         assert not train_donors & test_donors
         manifest=read(out/"dataset_manifest.json")
+        training=read(out/"training.json")
+        assert len(training["checkpoints"])==12
         assert sum(s["episodes"] for s in manifest["split"].values())==100
         assert sum(len(v) for v in manifest["families"].values())==len(set(sum(manifest["families"].values(),[])))==50
         library=np.load(out/"demo_library.npz",allow_pickle=False)
@@ -104,9 +110,9 @@ def check(root):
                     t=len(z["reward"])
                     actual+=t
                     complete+=t*bool(z["terminated"][-1])
-            budget=read(out/"training.json")["budgets"][arm]
+            budget=training["budgets"][arm]
             assert actual==6000==budget["spent"] and complete==budget["usable"]
-        proof.append(dict(task=task,evaluated=evaluated,eligible=eligible,families=len(families),models=12))
+        proof.append(dict(task=task,evaluated=evaluated,eligible=eligible,families=len(families),models=len(training["checkpoints"])))
     for arm,macro in summary["macro_gap_rmse"].items():
         np.testing.assert_allclose(macro,np.mean([r["errors"][arm]["gap_rmse"] for r in summary["tasks"]]))
     return proof
@@ -115,5 +121,6 @@ def check(root):
 if __name__=="__main__":
     p=argparse.ArgumentParser()
     p.add_argument("run",type=Path)
+    p.add_argument("--task",type=int,choices=(13,19,25))
     args=p.parse_args()
-    print(json.dumps(check(args.run),indent=2))
+    print(json.dumps(check(args.run,args.task),indent=2))

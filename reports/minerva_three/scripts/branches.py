@@ -61,7 +61,7 @@ def anchors(sim, worker, workers, library):
         if is_train and not usable:
             usable = [0]
         dests = [out/"anchors"/(stem(init,f)+".json") for f in usable]
-        if all(p.exists() for p in dests):
+        if all(p.exists() and (out/"snapshots"/(p.stem+".npz")).exists() for p in dests):
             continue
         raw,(obs,state) = sim.start(init,0)
         # Independently reconstruct policy queues at every requested frame in one pass.

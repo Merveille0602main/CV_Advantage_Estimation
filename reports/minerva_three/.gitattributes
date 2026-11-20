@@ -1,1 +1,6 @@
 * -text
+*.csv whitespace=trailing-space,space-before-tab,cr-at-eol
+*.npz binary
+*.pt binary
+*.png binary
+*.json whitespace=trailing-space,space-before-tab,cr-at-eol

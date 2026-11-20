@@ -105,7 +105,7 @@ def load_augmentation(task,arm):
                          complete=len(complete),families=sorted(used),first_actions=choices)
 
 
-def train(task):
+def train(task,baseline_only=False):
     data=validate_base(task)
     device="cuda" if torch.cuda.is_available() else "cpu"
     val=data["validation"]
@@ -114,7 +114,7 @@ def train(task):
     report=dict(device=device,seed=[0,1,2],checkpoints={},budgets={},validation_constant_rmse=float(np.sqrt(np.mean((train_mean-targets)**2))))
     old=read(OLD/"result.json")
     assert {p.name:file_hash(p) for p in WEIGHTS.iterdir() if p.is_file()}==read(OLD/"provenance.json")["weight_files"]
-    for arm in ARMS:
+    for arm in (("base",) if baseline_only else ARMS):
         episodes=list(data["train"])
         if arm!="base":
             extra,budget=load_augmentation(task,arm)
@@ -140,8 +140,11 @@ def train(task):
                 rmse=float(np.sqrt(np.mean((pred-targets)**2)))
                 report["checkpoints"][f"{arm}/{path.stem}"]=dict(sha256=file_hash(path),validation_rmse=rmse)
                 print(task,arm,kind,seed,"validation RMSE",rmse,flush=True)
-    assert report["budgets"]["plain"]["families"]==report["budgets"]["branch"]["families"]
-    write(task_dir(task)/"training.json",report)
+    if baseline_only:
+        write(task_dir(task)/"baseline_validation.json",report)
+    else:
+        assert report["budgets"]["plain"]["families"]==report["budgets"]["branch"]["families"]
+        write(task_dir(task)/"training.json",report)
 
 
 def score_episode(r,a,name,source):
@@ -310,12 +313,12 @@ def aggregate(task,cells,pairs,counts):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("mode",choices=("train","metrics"))
+    p.add_argument("mode",choices=("baseline","train","metrics"))
     mode=p.parse_args().mode
     summaries=[]
     for task in TASKS:
-        if mode=="train":
-            train(task)
+        if mode in ("baseline","train"):
+            train(task,baseline_only=mode=="baseline")
         else:
             result=aggregate(task,*predictions(task))
             write(task_dir(task)/"metrics.json",result)
